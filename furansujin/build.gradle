@@ -36,9 +36,9 @@ dependencies {
 //      org.gradle.jvmargs=-Xmx512m
 
 task makeJar(type: Copy) {
-    delete '../build/output/lib/furansujin.jar'
+    delete '../output/lib/furansujin.jar'
     from('build/intermediates/bundles/release/')
-    into('../build/output/lib/')
+    into('../output/lib/')
     include('classes.jar')
     rename ('classes.jar', 'furansujin.jar')
 }
