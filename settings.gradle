@@ -1,1 +1,1 @@
-include ':app', ':learn'
+include ':app', ':learn', ':furansujin'
