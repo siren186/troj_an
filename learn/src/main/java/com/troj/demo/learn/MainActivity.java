@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.troj.demo.furansujin.ChannelUtils;
 import com.xsj.crasheye.Crasheye;
 
 import butterknife.Bind;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private void initCrasheye() {
         Crasheye.init(this, "eaa37bd0");
         Crasheye.setFlushOnlyOverWiFi(true);
+        Crasheye.setChannelID(ChannelUtils.getChannel(this));
     }
 
     private void onCreateImpl() {
