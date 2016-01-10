@@ -27,8 +27,6 @@ public class CloudCardsView {
 
         int itemSize = 6;
 
-        //initCloudCardsViewData(sourceFrom);
-
         showNewsfeedCards();
     }
 
@@ -39,7 +37,6 @@ public class CloudCardsView {
 
     public ArrayList<HashMap<String, Object>> getDatas() {
         viewItemsArraylists = new ArrayList<HashMap<String, Object>>();
-
         viewItemsArraylists.add(getHashMapData());
 
         return viewItemsArraylists;
@@ -47,8 +44,11 @@ public class CloudCardsView {
 
     private HashMap<String, Object> getHashMapData() {
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("showtext", "haha");
         return hashMap;
+    }
+
+    public void setItemList(ArrayList<HashMap<String, Object>> list) {
+        newsfeedCardsAdapter.setList(list);
     }
 
     private final class ListItemButtonClickListener implements View.OnClickListener {

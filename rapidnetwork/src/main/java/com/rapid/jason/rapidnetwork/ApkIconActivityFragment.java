@@ -19,6 +19,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -29,10 +30,10 @@ public class ApkIconActivityFragment extends Fragment {
 
     private ListView lvCard = null;
 
-    private CloudCardsView mCloudCardsView;
+    private CloudCardsView mCloudCardsView = null;
     private NetworkTask mNetworkTask;
 
-    private HashMap<String, String> hashMapApkIcon = null;
+    private ArrayList<HashMap<String, Object>> hashMapApkIconArrayList = null;
 
     private Response.Listener<JSONObject> mJsonObjectListener = null;
 
@@ -40,14 +41,17 @@ public class ApkIconActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        hashMapApkIcon = new HashMap<String, String>();
+        hashMapApkIconArrayList = new ArrayList<HashMap<String, Object>>();
         createNewJsonListener();
 
         mNetworkTask = new NetworkTask(this.getActivity());
-        mNetworkTask.addNewTask("http://cms.sjk.ijinshan.com/app/api/cdn/app/3390.json", mJsonObjectListener);
-        mNetworkTask.addNewTask("http://cms.sjk.ijinshan.com/app/api/cdn/app/3391.json", mJsonObjectListener);
-        mNetworkTask.addNewTask("http://cms.sjk.ijinshan.com/app/api/cdn/app/3392.json", mJsonObjectListener);
-        mNetworkTask.addNewTask("http://cms.sjk.ijinshan.com/app/api/cdn/app/3393.json", mJsonObjectListener);
+
+        String strUrlFormat = "http://cms.sjk.ijinshan.com/app/api/cdn/app/%d.json";
+
+        for (int i = 0; i < 8; ++i) {
+            String strUrl = String.format(strUrlFormat, 3000 + i);
+            mNetworkTask.addNewTask(strUrl, mJsonObjectListener);
+        }
     }
 
     private void createNewJsonListener() {
@@ -68,6 +72,7 @@ public class ApkIconActivityFragment extends Fragment {
                 return false;
             }
 
+            HashMap<String, Object> hashMapApkIcon = new HashMap<String, Object>();
             JSONObject jo = jsonObject.getJSONObject("data");
 
             if (!jo.isNull("pkname")) {
@@ -77,9 +82,11 @@ public class ApkIconActivityFragment extends Fragment {
             if (!jo.isNull("logoHdUrl")) {
                 String url = jo.getString("logoHdUrl");
                 if (!TextUtils.isEmpty(url)) {
-                    hashMapApkIcon.put("logoUrl", url);
+                    hashMapApkIcon.put("logoHdUrl", url);
                 }
             }
+
+            hashMapApkIconArrayList.add(hashMapApkIcon);
         } catch (JSONException e1) {
             e1.printStackTrace();
         }
@@ -87,7 +94,11 @@ public class ApkIconActivityFragment extends Fragment {
     }
 
     private void refreshView() {
-        return;
+        if (mCloudCardsView == null) {
+            return;
+        }
+
+        mCloudCardsView.setItemList(hashMapApkIconArrayList);
     }
 
     @Override
