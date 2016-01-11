@@ -43,7 +43,7 @@ public class NetworkTask {
             return;
         }
 
-        StringRequest stringRequest = new StringRequest(
+        StringUtf8Request stringRequest = new StringUtf8Request(
                 Url, stringListener,
                 new Response.ErrorListener() {
                     @Override

@@ -38,10 +38,9 @@ public class ApkIconActivityFragment extends Fragment {
 
         mNetworkTask = new NetworkTask(this.getActivity());
 
-        String strUrlFormat = "http://cms.sjk.ijinshan.com/app/api/cdn/app/%d.json";
-        strUrlFormat = "http://apk.gfan.com/Product/App%d.html";//1087029
+        String strUrlFormat = "http://apk.gfan.com/Product/App%d.html";
 
-        for (int i = 0; i < 8; ++i) {
+        for (int i = 0; i < 20; ++i) {
             String strUrl = String.format(strUrlFormat, 1087029 + i);
             mNetworkTask.addNewStringTask(strUrl, mStringListener);
         }
@@ -61,23 +60,80 @@ public class ApkIconActivityFragment extends Fragment {
     }
 
     private boolean parseString(String stringObject) {
-        String str = stringObject;
-        int nPlace = str.indexOf("app-view png");
+        String strAll = stringObject;
+        int nPlace = strAll.indexOf("app-view png");
 
+        if(nPlace == -1) {
+            return false;
+        }
+
+        char chPiece[] = new char[1024];
+        strAll.getChars(nPlace, nPlace + 512, chPiece, 0);
+        String strAllPiece = new String(chPiece);
+
+        String strPicUrl = parseUrlString(strAllPiece);
+        if (strPicUrl != null && strPicUrl.equals("")) {
+            return false;
+        } else if (strPicUrl != null) {
+            strPicUrl = strPicUrl.replaceAll("\\u0000", "");
+        }
+        String strPicName = parseNameString(strAllPiece);
+        if (strPicName != null && strPicName.equals("")) {
+            return false;
+        }
+
+        HashMap<String, Object> hashMapApkIcon = new HashMap<String, Object>();
+        hashMapApkIcon.put("pkname", strPicName);
+        hashMapApkIcon.put("logoHdUrl", strPicUrl);
+        hashMapApkIconArrayList.add(hashMapApkIcon);
+
+        return true;
+    }
+
+    private String parseUrlString(String strAllPiece) {
         int nStart = 0;
         int nEnd = 0;
 
-        char c[] = new char[1024];
-        String strAll;
-        if(nPlace != -1) {
-            nStart = str.indexOf("src=", nPlace);
-            nEnd = str.indexOf("alt=", nStart + 6);
-
-            str.getChars(nStart + 5, nStart + 5 + 40, c, 0);
-
+        nStart = strAllPiece.indexOf("src=");
+        if (nStart == -1) {
+            return "";
         }
-        strAll = new String(c);
-        return true;
+        nEnd = strAllPiece.indexOf(" alt=", nStart);
+        if (nEnd == -1) {
+            return "";
+        }
+
+        if (nEnd - (nStart + 5) == 0) {
+            return "";
+        }
+
+        char ch[] = new char[nEnd - nStart - 4];
+        strAllPiece.getChars(nStart + 5, nEnd - 1, ch, 0);
+        String strPicUrl = new String(ch);
+        return strPicUrl;
+    }
+
+    private String parseNameString(String strAllPiece) {
+        int nStart = 0;
+        int nEnd = 0;
+
+        nStart = strAllPiece.indexOf("alt=\"");
+        if (nStart == -1) {
+            return "";
+        }
+        nEnd = strAllPiece.indexOf("\"/>", nStart);
+        if (nEnd == -1) {
+            return "";
+        }
+
+        if (nEnd - (nStart + 5) == 0) {
+            return "";
+        }
+
+        char ch[] = new char[nEnd - nStart - 4];
+        strAllPiece.getChars(nStart + 5, nEnd, ch, 0);
+        String strPicUrl = new String(ch);
+        return strPicUrl;
     }
 
     private Response.Listener<JSONObject> createNewJsonListener() {
