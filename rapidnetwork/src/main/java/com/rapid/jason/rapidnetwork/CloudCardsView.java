@@ -7,9 +7,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by admin on 1/10/2016.
- */
 public class CloudCardsView {
 
     private ListView mListView = null;

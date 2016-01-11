@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">learn</string>
-    <string name="helloworld">helloworld</string>
+    <string name="web_browser_label">&#160;&#160;&#160;learn-browser</string>
 </resources>

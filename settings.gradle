@@ -1,1 +1,1 @@
-include ':app', ':learn', ':troposphere', ':immortal', ':rapidnetwork'
+include ':app', ':learn', ':furansujin', ':troposphere', ':immortal', ':rapidnetwork'

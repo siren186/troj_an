@@ -7,13 +7,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-/**
- * Created by admin on 1/10/2016.
- */
 public class NetworkTask {
     private RequestQueue mRequestQueue = null;
 
@@ -22,7 +20,7 @@ public class NetworkTask {
 
     }
 
-    public void addNewTask(String Url, Response.Listener<JSONObject> jsonObjectListener) {
+    public void addNewJsonTask(String Url, Response.Listener<JSONObject> jsonObjectListener) {
         if (mRequestQueue == null) {
             return;
         }
@@ -38,5 +36,23 @@ public class NetworkTask {
         );
 
         mRequestQueue.add(jsonRequest);
+    }
+
+    public void addNewStringTask(String Url, Response.Listener<String> stringListener) {
+        if (mRequestQueue == null) {
+            return;
+        }
+
+        StringRequest stringRequest = new StringRequest(
+                Url, stringListener,
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("TAG", error.getMessage(), error);
+                    }
+                }
+        );
+
+        mRequestQueue.add(stringRequest);
     }
 }
