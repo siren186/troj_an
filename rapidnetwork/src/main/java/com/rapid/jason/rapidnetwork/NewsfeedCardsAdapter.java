@@ -18,6 +18,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+import de.greenrobot.event.EventBus;
+
 public class NewsfeedCardsAdapter extends BaseAdapter {
 
     private ArrayList<HashMap<String, Object>> mList;
@@ -25,6 +27,8 @@ public class NewsfeedCardsAdapter extends BaseAdapter {
 
     private final OnClickListener itemButtonClickListener;
     private final RequestQueue mQueue;
+
+    private ImageCache mImageCache = new ImageCache();
 
     final int TYPE_1 = 0;
 
@@ -57,6 +61,11 @@ public class NewsfeedCardsAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
+        if (position == (mList.size() - 2)) {
+            EventBus.getDefault().post(new ActionEvent("FirstEvent btn clicked"));
+        } else if (mList.size() < 15) {
+            EventBus.getDefault().post(new ActionEvent("FirstEvent btn clicked"));
+        }
         return mList.get(position);
     }
 
@@ -101,16 +110,7 @@ public class NewsfeedCardsAdapter extends BaseAdapter {
 
         viewHolder.showText.setText((String)hashMapList.get("pkname"));
 
-        ImageLoader imageLoader = new ImageLoader(mQueue, new ImageLoader.ImageCache() {
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-            }
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return null;
-            }
-        });
+        ImageLoader imageLoader = new ImageLoader(mQueue, mImageCache);
 
         ImageLoader.ImageListener listener = ImageLoader.getImageListener(viewHolder.imageView,
                 R.mipmap.ic_launcher, R.mipmap.ic_launcher);

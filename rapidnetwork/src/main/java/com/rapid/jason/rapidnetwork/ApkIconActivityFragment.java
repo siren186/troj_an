@@ -3,6 +3,8 @@ package com.rapid.jason.rapidnetwork;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +18,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.greenrobot.event.EventBus;
+
 public class ApkIconActivityFragment extends Fragment {
 
+    private final static String TAG = ApkIconActivityFragment.class.getName();
     private ListView lvCard = null;
 
     private CloudCardsView mCloudCardsView = null;
@@ -27,6 +32,9 @@ public class ApkIconActivityFragment extends Fragment {
 
     private Response.Listener<JSONObject> mJsonObjectListener = null;
     private Response.Listener<String> mStringListener = null;
+
+    private int mApkIconUrlId = 1000000;
+    private String mStrUrlFormat = "http://apk.gfan.com/Product/App%d.html";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,11 +46,34 @@ public class ApkIconActivityFragment extends Fragment {
 
         mNetworkTask = new NetworkTask(this.getActivity());
 
-        String strUrlFormat = "http://apk.gfan.com/Product/App%d.html";
+        addNetworkTask(300);
 
-        for (int i = 0; i < 20; ++i) {
-            String strUrl = String.format(strUrlFormat, 1087029 + i);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(ActionEvent event) {
+        String msg = "onEventMainThread收到了消息：" + event.getMsg();
+        Log.d(TAG, msg);
+    }
+
+    private void addNetworkTask(int nSize) {
+        for (int i = 0; i < nSize; ++i) {
+            mApkIconUrlId = mApkIconUrlId + i;
+            String strUrl = String.format(mStrUrlFormat, mApkIconUrlId);
             mNetworkTask.addNewStringTask(strUrl, mStringListener);
+        }
+    }
+
+    private void checkListEnough() {
+        if (hashMapApkIconArrayList.size() < 15) {
+            addNetworkTask(1);
         }
     }
 
@@ -72,20 +103,33 @@ public class ApkIconActivityFragment extends Fragment {
         String strAllPiece = new String(chPiece);
 
         String strPicUrl = parseUrlString(strAllPiece);
-        if (strPicUrl != null && strPicUrl.equals("")) {
+        if (strPicUrl == null) {
+            return false;
+        }
+        if (strPicUrl.equals("")) {
             return false;
         } else if (strPicUrl != null) {
             strPicUrl = strPicUrl.replaceAll("\\u0000", "");
         }
+        Log.d(TAG, strPicUrl);
+
         String strPicName = parseNameString(strAllPiece);
-        if (strPicName != null && strPicName.equals("")) {
+        if (strPicName == null) {
             return false;
         }
+        if (strPicName.equals("")) {
+            return false;
+        } else {
+            strPicName = strPicName.replaceAll("\\u0000", "");
+        }
+        Log.d(TAG, strPicName);
 
         HashMap<String, Object> hashMapApkIcon = new HashMap<String, Object>();
         hashMapApkIcon.put("pkname", strPicName);
         hashMapApkIcon.put("logoHdUrl", strPicUrl);
         hashMapApkIconArrayList.add(hashMapApkIcon);
+
+        LruCache lruCache = null;
 
         return true;
     }
@@ -181,6 +225,7 @@ public class ApkIconActivityFragment extends Fragment {
             return;
         }
 
+        checkListEnough();
         mCloudCardsView.setItemList(hashMapApkIconArrayList);
     }
 
