@@ -36,6 +36,8 @@ public class ApkIconActivityFragment extends Fragment {
     private int mApkIconUrlId = 1000000;
     private String mStrUrlFormat = "http://apk.gfan.com/Product/App%d.html";
 
+    private int mRqSize = 0;
+    private int mRqListSize = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +60,23 @@ public class ApkIconActivityFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEventMainThread(ActionEvent event) {
-        String msg = "onEventMainThread收到了消息：" + event.getMsg();
+    public void onEventMainThread(MessageEvent event) {
+        String msg = "onEventMainThread:" + event.getMsg();
         Log.d(TAG, msg);
     }
 
-    private void addNetworkTask(int nSize) {
-        for (int i = 0; i < nSize; ++i) {
+    public void onEvent(MessageEvent event) {
+        String msg = event.getMsg();
+        if (msg.equals("add request") && mRqSize <= 0) {
+            addNetworkTask(200);
+        }
+        Log.d(TAG, msg);
+    }
+
+    private void addNetworkTask(int nRqSize) {
+        mRqSize = nRqSize;
+        mRqListSize = 0;
+        for (int i = 0; i < nRqSize; ++i) {
             mApkIconUrlId = mApkIconUrlId + i;
             String strUrl = String.format(mStrUrlFormat, mApkIconUrlId);
             mNetworkTask.addNewStringTask(strUrl, mStringListener);
@@ -72,8 +84,8 @@ public class ApkIconActivityFragment extends Fragment {
     }
 
     private void checkListEnough() {
-        if (hashMapApkIconArrayList.size() < 15) {
-            addNetworkTask(1);
+        if (mRqListSize < 15) {
+            addNetworkTask(100);
         }
     }
 
@@ -81,9 +93,16 @@ public class ApkIconActivityFragment extends Fragment {
         Response.Listener<String> stringListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
+                --mRqSize;
                 if (!parseString(s)) {
                     return;
                 }
+                ++mRqListSize;
+
+                if (mRqSize <= 0) {
+                    checkListEnough();
+                }
+
                 refreshView();
             }
         };
@@ -225,7 +244,6 @@ public class ApkIconActivityFragment extends Fragment {
             return;
         }
 
-        checkListEnough();
         mCloudCardsView.setItemList(hashMapApkIconArrayList);
     }
 

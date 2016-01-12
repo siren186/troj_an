@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +21,8 @@ import com.android.volley.toolbox.Volley;
 import de.greenrobot.event.EventBus;
 
 public class NewsfeedCardsAdapter extends BaseAdapter {
+
+    private final static String TAG = NewsfeedCardsAdapter.class.getName();
 
     private ArrayList<HashMap<String, Object>> mList;
     private final Context mContext;
@@ -61,11 +63,6 @@ public class NewsfeedCardsAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (position == (mList.size() - 2)) {
-            EventBus.getDefault().post(new ActionEvent("FirstEvent btn clicked"));
-        } else if (mList.size() < 15) {
-            EventBus.getDefault().post(new ActionEvent("FirstEvent btn clicked"));
-        }
         return mList.get(position);
     }
 
@@ -91,6 +88,12 @@ public class NewsfeedCardsAdapter extends BaseAdapter {
             convertView = getConvertView(parent, type);
         }
 
+        Log.d(TAG, "getView:" + position + "  listSize:" + mList.size());
+
+        if (mList.size() > 15 && position >= (mList.size() - 2)) {
+            EventBus.getDefault().post(new MessageEvent("add request"));
+        }
+
         setViewHolder(convertView, position);
 
         return convertView;
@@ -108,7 +111,7 @@ public class NewsfeedCardsAdapter extends BaseAdapter {
 
         HashMap<String, Object> hashMapList = mList.get(position);
 
-        viewHolder.showText.setText((String)hashMapList.get("pkname"));
+        viewHolder.showText.setText((String)hashMapList.get("pkname") + ", " + mList.size() + ", " + position);
 
         ImageLoader imageLoader = new ImageLoader(mQueue, mImageCache);
 
