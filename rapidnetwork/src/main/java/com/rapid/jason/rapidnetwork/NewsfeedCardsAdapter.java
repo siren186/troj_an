@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,13 +18,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+import de.greenrobot.event.EventBus;
+
 public class NewsfeedCardsAdapter extends BaseAdapter {
+
+    private final static String TAG = NewsfeedCardsAdapter.class.getName();
 
     private ArrayList<HashMap<String, Object>> mList;
     private final Context mContext;
 
     private final OnClickListener itemButtonClickListener;
     private final RequestQueue mQueue;
+
+    private ImageCache mImageCache = new ImageCache();
 
     final int TYPE_1 = 0;
 
@@ -82,6 +88,12 @@ public class NewsfeedCardsAdapter extends BaseAdapter {
             convertView = getConvertView(parent, type);
         }
 
+        Log.d(TAG, "getView:" + position + "  listSize:" + mList.size());
+
+        if (mList.size() > 15 && position >= (mList.size() - 2)) {
+            EventBus.getDefault().post(new MessageEvent("add request"));
+        }
+
         setViewHolder(convertView, position);
 
         return convertView;
@@ -99,18 +111,9 @@ public class NewsfeedCardsAdapter extends BaseAdapter {
 
         HashMap<String, Object> hashMapList = mList.get(position);
 
-        viewHolder.showText.setText((String)hashMapList.get("pkname"));
+        viewHolder.showText.setText((String)hashMapList.get("pkname") + ", " + mList.size() + ", " + position);
 
-        ImageLoader imageLoader = new ImageLoader(mQueue, new ImageLoader.ImageCache() {
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-            }
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return null;
-            }
-        });
+        ImageLoader imageLoader = new ImageLoader(mQueue, mImageCache);
 
         ImageLoader.ImageListener listener = ImageLoader.getImageListener(viewHolder.imageView,
                 R.mipmap.ic_launcher, R.mipmap.ic_launcher);

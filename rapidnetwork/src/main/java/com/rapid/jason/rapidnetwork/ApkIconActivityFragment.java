@@ -3,6 +3,8 @@ package com.rapid.jason.rapidnetwork;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +18,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.greenrobot.event.EventBus;
+
 public class ApkIconActivityFragment extends Fragment {
 
+    private final static String TAG = ApkIconActivityFragment.class.getName();
     private ListView lvCard = null;
 
     private CloudCardsView mCloudCardsView = null;
@@ -28,6 +33,11 @@ public class ApkIconActivityFragment extends Fragment {
     private Response.Listener<JSONObject> mJsonObjectListener = null;
     private Response.Listener<String> mStringListener = null;
 
+    private int mApkIconUrlId = 1000000;
+    private String mStrUrlFormat = "http://apk.gfan.com/Product/App%d.html";
+
+    private int mRqSize = 0;
+    private int mRqListSize = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +48,44 @@ public class ApkIconActivityFragment extends Fragment {
 
         mNetworkTask = new NetworkTask(this.getActivity());
 
-        String strUrlFormat = "http://apk.gfan.com/Product/App%d.html";
+        addNetworkTask(300);
 
-        for (int i = 0; i < 20; ++i) {
-            String strUrl = String.format(strUrlFormat, 1087029 + i);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(MessageEvent event) {
+        String msg = "onEventMainThread:" + event.getMsg();
+        Log.d(TAG, msg);
+    }
+
+    public void onEvent(MessageEvent event) {
+        String msg = event.getMsg();
+        if (msg.equals("add request") && mRqSize <= 0) {
+            addNetworkTask(200);
+        }
+        Log.d(TAG, msg);
+    }
+
+    private void addNetworkTask(int nRqSize) {
+        mRqSize = nRqSize;
+        mRqListSize = 0;
+        for (int i = 0; i < nRqSize; ++i) {
+            mApkIconUrlId = mApkIconUrlId + i;
+            String strUrl = String.format(mStrUrlFormat, mApkIconUrlId);
             mNetworkTask.addNewStringTask(strUrl, mStringListener);
+        }
+    }
+
+    private void checkListEnough() {
+        if (mRqListSize < 15) {
+            addNetworkTask(100);
         }
     }
 
@@ -50,9 +93,16 @@ public class ApkIconActivityFragment extends Fragment {
         Response.Listener<String> stringListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
+                --mRqSize;
                 if (!parseString(s)) {
                     return;
                 }
+                ++mRqListSize;
+
+                if (mRqSize <= 0) {
+                    checkListEnough();
+                }
+
                 refreshView();
             }
         };
@@ -72,20 +122,33 @@ public class ApkIconActivityFragment extends Fragment {
         String strAllPiece = new String(chPiece);
 
         String strPicUrl = parseUrlString(strAllPiece);
-        if (strPicUrl != null && strPicUrl.equals("")) {
+        if (strPicUrl == null) {
+            return false;
+        }
+        if (strPicUrl.equals("")) {
             return false;
         } else if (strPicUrl != null) {
             strPicUrl = strPicUrl.replaceAll("\\u0000", "");
         }
+        Log.d(TAG, strPicUrl);
+
         String strPicName = parseNameString(strAllPiece);
-        if (strPicName != null && strPicName.equals("")) {
+        if (strPicName == null) {
             return false;
         }
+        if (strPicName.equals("")) {
+            return false;
+        } else {
+            strPicName = strPicName.replaceAll("\\u0000", "");
+        }
+        Log.d(TAG, strPicName);
 
         HashMap<String, Object> hashMapApkIcon = new HashMap<String, Object>();
         hashMapApkIcon.put("pkname", strPicName);
         hashMapApkIcon.put("logoHdUrl", strPicUrl);
         hashMapApkIconArrayList.add(hashMapApkIcon);
+
+        LruCache lruCache = null;
 
         return true;
     }
