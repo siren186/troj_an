@@ -1,4 +1,4 @@
-package com.rapid.jason.rapidnetwork;
+package com.rapid.jason.rapidnetwork.NetworkIcon;
 
 import android.app.Activity;
 import android.view.View;

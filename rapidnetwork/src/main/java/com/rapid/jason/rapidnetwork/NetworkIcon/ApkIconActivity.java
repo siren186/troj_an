@@ -1,9 +1,11 @@
-package com.rapid.jason.rapidnetwork;
+package com.rapid.jason.rapidnetwork.NetworkIcon;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.rapid.jason.rapidnetwork.R;
 
 public class ApkIconActivity extends ActionBarActivity {
 

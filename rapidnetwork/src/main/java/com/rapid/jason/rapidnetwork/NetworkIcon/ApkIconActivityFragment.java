@@ -1,4 +1,4 @@
-package com.rapid.jason.rapidnetwork;
+package com.rapid.jason.rapidnetwork.NetworkIcon;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.android.volley.Response;
+import com.rapid.jason.rapidnetwork.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
