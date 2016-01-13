@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.rapid.jason.rapidnetwork.ListViewUtil.MessageEvent;
 import com.rapid.jason.rapidnetwork.R;
 
 import de.greenrobot.event.EventBus;

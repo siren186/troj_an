@@ -12,11 +12,11 @@ public class CloudCardsView {
     private ListView mListView = null;
     private NewsfeedCardsAdapter newsfeedCardsAdapter;
 
-    public Activity mAtachActivity = null;
+    public Activity mAttachActivity = null;
     public ArrayList<HashMap<String, Object>> viewItemsArraylists;
 
     public CloudCardsView(Activity atachActivity) {
-        mAtachActivity = atachActivity;
+        mAttachActivity = atachActivity;
     }
 
     public void init(ListView listView, int sourceFrom) {
@@ -28,7 +28,7 @@ public class CloudCardsView {
     }
 
     private void showNewsfeedCards() {
-        newsfeedCardsAdapter = new NewsfeedCardsAdapter(mAtachActivity, getDatas(), new ListItemButtonClickListener());
+        newsfeedCardsAdapter = new NewsfeedCardsAdapter(mAttachActivity, getDatas(), new ListItemButtonClickListener());
         mListView.setAdapter(newsfeedCardsAdapter);
     }
 
@@ -53,7 +53,7 @@ public class CloudCardsView {
         public void onClick(View v) {
             int nId = v.getId();
 
-            mAtachActivity.finish();
+            mAttachActivity.finish();
         }
     }
 }

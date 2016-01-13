@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.android.volley.Response;
+import com.rapid.jason.rapidnetwork.ListViewUtil.MessageEvent;
 import com.rapid.jason.rapidnetwork.R;
 
 import org.json.JSONException;
