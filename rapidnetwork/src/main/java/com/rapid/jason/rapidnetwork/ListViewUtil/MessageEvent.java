@@ -1,4 +1,4 @@
-package com.rapid.jason.rapidnetwork;
+package com.rapid.jason.rapidnetwork.ListViewUtil;
 
 /**
  * Created by Jzcloud on 16/1/12.

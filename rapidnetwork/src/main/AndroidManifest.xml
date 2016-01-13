@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ApkIconActivity"
+            android:name=".NetworkIcon.ApkIconActivity"
             android:label="@string/title_activity_apk_icon" >
         </activity>
         <activity
-            android:name=".TraversalFileActivity"
+            android:name=".TraversalFile.TraversalFileActivity"
             android:label="@string/title_activity_traversal_file" >
         </activity>
     </application>

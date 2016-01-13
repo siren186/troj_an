@@ -1,4 +1,4 @@
-package com.rapid.jason.rapidnetwork;
+package com.rapid.jason.rapidnetwork.NetworkIcon;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;

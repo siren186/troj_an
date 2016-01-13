@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.rapid.jason.rapidnetwork.NetworkIcon.ApkIconActivity;
+import com.rapid.jason.rapidnetwork.TraversalFile.TraversalFileActivity;
+
 public class MainActivity extends ActionBarActivity {
 
     Button btnVolleyNetIcon = null;
