@@ -1,4 +1,4 @@
-package com.rapid.jason.rapidnetwork;
+package com.rapid.jason.rapidnetwork.NetworkIcon;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;

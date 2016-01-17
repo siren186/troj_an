@@ -8,9 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.rapid.jason.rapidnetwork.NetworkIcon.ApkIconActivity;
+import com.rapid.jason.rapidnetwork.TraversalFile.TraversalFileActivity;
+
 public class MainActivity extends ActionBarActivity {
 
     Button btnVolleyNetIcon = null;
+    Button btnVolleyTraversalFile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +26,15 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ApkIconActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnVolleyTraversalFile = (Button) findViewById(R.id.volley_traversal_file_btn);
+        btnVolleyTraversalFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TraversalFileActivity.class);
                 startActivity (intent);
             }
         });

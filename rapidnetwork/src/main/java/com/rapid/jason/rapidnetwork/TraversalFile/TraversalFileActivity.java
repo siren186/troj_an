@@ -1,23 +1,30 @@
-package com.rapid.jason.rapidnetwork;
+package com.rapid.jason.rapidnetwork.TraversalFile;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ApkIconActivity extends ActionBarActivity {
+import com.rapid.jason.rapidnetwork.R;
+
+import java.io.File;
+import java.util.Vector;
+
+
+public class TraversalFileActivity extends ActionBarActivity {
+
+    private static final String TAG = TraversalFileActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_apk_icon);
+        setContentView(R.layout.activity_traversal_file);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_apk_icon, menu);
+        getMenuInflater().inflate(R.menu.menu_traversal_file, menu);
         return true;
     }
 
