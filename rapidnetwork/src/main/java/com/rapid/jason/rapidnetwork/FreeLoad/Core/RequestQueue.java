@@ -7,6 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RequestQueue {
 
+    /** The network dispatchers. */
+    private DownloadDispatcher[] mDispatchers;
+
     /** The queue of requests that are actually going out to the network. */
     private final PriorityBlockingQueue<Request<?>> mDownloadQueue =
             new PriorityBlockingQueue<Request<?>>();
@@ -24,7 +27,26 @@ public class RequestQueue {
      * Starts the dispatchers in this queue.
      */
     public void start() {
+        stop();
 
+        // Create network dispatchers (and corresponding threads) up to the pool size.
+        for (int i = 0; i < mDispatchers.length; i++) {
+            DownloadDispatcher networkDispatcher =
+                    new DownloadDispatcher(mDownloadQueue);
+            mDispatchers[i] = networkDispatcher;
+            networkDispatcher.start();
+        }
+    }
+
+    /**
+     * Stops download dispatchers.
+     */
+    public void stop() {
+        for (int i = 0; i < mDispatchers.length; i++) {
+            if (mDispatchers[i] != null) {
+                mDispatchers[i].quit();
+            }
+        }
     }
 
     /**

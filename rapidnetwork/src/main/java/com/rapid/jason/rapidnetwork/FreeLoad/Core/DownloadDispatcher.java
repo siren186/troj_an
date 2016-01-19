@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.BlockingQueue;
 
 public class DownloadDispatcher extends Thread {
 
@@ -20,6 +21,11 @@ public class DownloadDispatcher extends Thread {
     private boolean finish = false;
     private FileDownloader downloader;
 
+    /** The queue of requests to service. */
+    private final BlockingQueue<Request<?>> mQueue;
+    /** Used for telling us to die. */
+    private volatile boolean mQuit = false;
+
     public DownloadDispatcher(FileDownloader downloader, URL downUrl, File saveFile, int block, int downLength, int threadId) {
         this.downloader = downloader;
         this.downUrl = downUrl;
@@ -27,6 +33,8 @@ public class DownloadDispatcher extends Thread {
         this.block = block;
         this.downLength = downLength;
         this.threadId = threadId;
+
+        this.mQueue = null;
     }
 
     public boolean isFinish() {
@@ -76,5 +84,18 @@ public class DownloadDispatcher extends Thread {
 
     public long getDownLength() {
         return downLength;
+    }
+
+    /**
+     * Forces this dispatcher to quit immediately.  If any requests are still in
+     * the queue, they are not guaranteed to be processed.
+     */
+    public void quit() {
+        mQuit = true;
+        interrupt();
+    }
+
+    public DownloadDispatcher(BlockingQueue<Request<?>> queue) {
+        mQueue = queue;
     }
 }

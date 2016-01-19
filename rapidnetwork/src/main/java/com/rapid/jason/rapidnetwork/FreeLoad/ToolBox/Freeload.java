@@ -6,7 +6,7 @@ import com.rapid.jason.rapidnetwork.FreeLoad.core.RequestQueue;
 
 public class Freeload {
 
-    public static RequestQueue Freeload(Context context) {
+    public static RequestQueue newRequestQueue(Context context) {
         RequestQueue queue = new RequestQueue();
         queue.start();
 

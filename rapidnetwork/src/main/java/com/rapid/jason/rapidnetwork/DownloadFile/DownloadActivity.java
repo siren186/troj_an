@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
+import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.DownloadRequest;
+import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.Freeload;
 import com.rapid.jason.rapidnetwork.R;
 
 import java.io.File;
@@ -20,6 +23,8 @@ public class DownloadActivity extends ActionBarActivity {
     private Button button = null;
 
     private File mDownloadFile;
+
+    private String Url = "http://gdown.baidu.com/data/wisegame/f70d2a17410e25a8/shoujiyingyongshichang_1.apk";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +42,21 @@ public class DownloadActivity extends ActionBarActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                download("http://gdown.baidu.com/data/wisegame/f70d2a17410e25a8/shoujiyingyongshichang_1.apk", mDownloadFile);
+                download(Url, mDownloadFile);
             }
         });
+
+        Freeload.newRequestQueue(this);
+
+        Response.Listener<String> s = new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+
+            }
+        };
+
+        DownloadRequest request = new DownloadRequest(Url, s);
     }
 
     @Override
