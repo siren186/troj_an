@@ -1,12 +1,9 @@
-package com.rapid.jason.rapidnetwork.ListViewUtil;
+package com.rapid.jason.rapidnetwork.DownloadFile;
 
-/**
- * Created by Jzcloud on 16/1/12.
- */
-public class MessageEvent {
+public class DownloadEvent {
 
     private String mMsg;
-    public MessageEvent(String msg) {
+    public DownloadEvent(String msg) {
         // TODO Auto-generated constructor stub
         mMsg = msg;
     }

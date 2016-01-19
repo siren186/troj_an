@@ -16,7 +16,6 @@ public class NetworkTask {
 
     public NetworkTask(Context context) {
         mRequestQueue = Volley.newRequestQueue(context);
-
     }
 
     public void addNewJsonTask(String Url, Response.Listener<JSONObject> jsonObjectListener) {

@@ -30,6 +30,10 @@
             android:name=".TraversalFile.TraversalFileActivity"
             android:label="@string/title_activity_traversal_file" >
         </activity>
+        <activity
+            android:name=".DownloadFile.DownloadActivity"
+            android:label="@string/title_activity_download" >
+        </activity>
     </application>
 
 </manifest>
