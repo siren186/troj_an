@@ -8,7 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.rapid.jason.rapidnetwork.FreeLoad.core.RequestQueue;
 import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.DownloadRequest;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.Freeload;
@@ -26,37 +28,33 @@ public class DownloadActivity extends ActionBarActivity {
 
     private String Url = "http://gdown.baidu.com/data/wisegame/f70d2a17410e25a8/shoujiyingyongshichang_1.apk";
 
+    private RequestQueue requestQueue = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
 
         EventBus.getDefault().register(this);
+        requestQueue = Freeload.newRequestQueue(this);
 
         String DownloadPath = Environment.getExternalStorageDirectory().getAbsolutePath();;
         DownloadPath += "/try/";
         mDownloadFile = new File(DownloadPath);
 
-
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                download(Url, mDownloadFile);
+                DownloadRequest request = new DownloadRequest(Url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        return;
+                    }
+                });
+                requestQueue.add(request);
             }
         });
-
-        Freeload.newRequestQueue(this);
-
-        Response.Listener<String> s = new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-
-            }
-        };
-
-        DownloadRequest request = new DownloadRequest(Url, s);
     }
 
     @Override
@@ -64,33 +62,13 @@ public class DownloadActivity extends ActionBarActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(DownloadEvent event) {
+    public void onEventMainThread(DownloadEvent event) {
         String msg = event.getMsg();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    private void download(final String path, final File savedir) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                FileDownloader loader = new FileDownloader(DownloadActivity.this, path, savedir, 1);
-                //progressBar.setMax(loader.getFileSize());//设置进度条的最大刻度为文件的长度
-
-                try {
-                    loader.download(new DownloadProgressListener() {
-                        @Override
-                        public void onDownloadSize(int size) {//实时获知文件已经下载的数据长度
-                            Message msg = new Message();
-                            msg.what = 1;
-                            msg.getData().putInt("size", size);
-                            //handler.sendMessage(msg);//发送消息
-                        }
-                    });
-                } catch (Exception e) {
-                    //handler.obtainMessage(-1).sendToTarget();
-                }
-            }
-        }).start();
+    public void onEvent(DownloadEvent event) {
+        String msg = event.getMsg();
     }
 
     @Override

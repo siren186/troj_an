@@ -1,6 +1,7 @@
 package com.rapid.jason.rapidnetwork.FreeLoad.core;
 
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,11 +11,22 @@ public class RequestQueue {
     /** The network dispatchers. */
     private DownloadDispatcher[] mDispatchers;
 
+    /** Number of download request dispatcher threads to start. */
+    private static final int DEFAULT_DOWNLOAD_THREAD_POOL_SIZE = 4;
+
     /** The queue of requests that are actually going out to the network. */
     private final PriorityBlockingQueue<Request<?>> mDownloadQueue =
             new PriorityBlockingQueue<Request<?>>();
 
     private AtomicInteger mSequenceGenerator = new AtomicInteger();
+
+    public RequestQueue() {
+        this(DEFAULT_DOWNLOAD_THREAD_POOL_SIZE);
+    }
+
+    public RequestQueue(int threadPoolSize) {
+        mDispatchers = new DownloadDispatcher[threadPoolSize];
+    }
 
     /**
      * The set of all requests currently being processed by this RequestQueue. A Request
@@ -72,5 +84,16 @@ public class RequestQueue {
      */
     public int getSequenceNumber() {
         return mSequenceGenerator.incrementAndGet();
+    }
+
+    /**
+     * Called from {@link Request#finish(String)}, indicating that processing of the given request
+     * has finished.
+     */
+    <T> void finish(Request<T> request) {
+        // Remove from the set of requests currently being processed.
+        synchronized (mCurrentRequests) {
+            mCurrentRequests.remove(request);
+        }
     }
 }

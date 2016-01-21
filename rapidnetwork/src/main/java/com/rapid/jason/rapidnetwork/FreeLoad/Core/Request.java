@@ -1,5 +1,8 @@
 package com.rapid.jason.rapidnetwork.FreeLoad.core;
 
+import android.os.Handler;
+import android.os.Looper;
+
 public abstract class Request<T> implements Comparable<Request<T>> {
 
     /** Sequence number of this request, used to enforce FIFO ordering. */
@@ -7,6 +10,9 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
     /** The request queue this request is associated with. */
     private RequestQueue mRequestQueue;
+
+    /** Whether or not this request has been canceled. */
+    private boolean mCanceled = false;
 
     public enum Priority {
         LOW,
@@ -22,6 +28,20 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     public Request<?> setRequestQueue(RequestQueue requestQueue) {
         mRequestQueue = requestQueue;
         return this;
+    }
+
+    /**
+     * Mark this request as canceled.  No callback will be delivered.
+     */
+    public void cancel() {
+        mCanceled = true;
+    }
+
+    /**
+     * Returns true if this request has been canceled.
+     */
+    public boolean isCanceled() {
+        return mCanceled;
     }
 
     /**
@@ -62,5 +82,14 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         return left == right ?
                 this.mSequence - other.mSequence :
                 right.ordinal() - left.ordinal();
+    }
+
+    /**
+     * Notifies the request queue that this request has finished (successfully or with error).
+     */
+    void finish(final String tag) {
+        if (mRequestQueue != null) {
+            mRequestQueue.finish(this);
+        }
     }
 }
