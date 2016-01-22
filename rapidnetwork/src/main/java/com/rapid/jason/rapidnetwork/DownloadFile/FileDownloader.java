@@ -163,13 +163,13 @@ public class FileDownloader {
             for (int i = 0; i < this.threads.length; i++) {//开启线程进行下载
                 int downLength = this.data.get(i+1);
 
-                if(downLength < this.block && this.downloadSize<this.fileSize){//判断线程是否已经完成下载,否则继续下载
-                    this.threads[i] = new DownloadDispatcher(this, url, this.saveFile, this.block, this.data.get(i+1), i+1);
-                    this.threads[i].setPriority(7);
-                    this.threads[i].start();
-                }else{
-                    this.threads[i] = null;
-                }
+//                if(downLength < this.block && this.downloadSize<this.fileSize){//判断线程是否已经完成下载,否则继续下载
+//                    this.threads[i] = new DownloadDispatcher(this, url, this.saveFile, this.block, this.data.get(i+1), i+1);
+//                    this.threads[i].setPriority(7);
+//                    this.threads[i].start();
+//                }else{
+//                    this.threads[i] = null;
+//                }
             }
 
             this.fileService.save(this.downloadUrl, this.data);
@@ -180,15 +180,15 @@ public class FileDownloader {
                 notFinish = false;//假定全部线程下载完成
 
                 for (int i = 0; i < this.threads.length; i++){
-                    if (this.threads[i] != null && !this.threads[i].isFinish()) {//如果发现线程未完成下载
-                        notFinish = true;//设置标志为下载没有完成
-
-                        if(this.threads[i].getDownLength() == -1){//如果下载失败,再重新下载
-                            this.threads[i] = new DownloadDispatcher(this, url, this.saveFile, this.block, this.data.get(i+1), i+1);
-                            this.threads[i].setPriority(7);
-                            this.threads[i].start();
-                        }
-                    }
+//                    if (this.threads[i] != null && !this.threads[i].isFinish()) {//如果发现线程未完成下载
+//                        notFinish = true;//设置标志为下载没有完成
+//
+//                        if(this.threads[i].getDownLength() == -1){//如果下载失败,再重新下载
+//                            this.threads[i] = new DownloadDispatcher(this, url, this.saveFile, this.block, this.data.get(i+1), i+1);
+//                            this.threads[i].setPriority(7);
+//                            this.threads[i].start();
+//                        }
+//                    }
                 }
 
                 if(listener!=null) listener.onDownloadSize(this.downloadSize);//通知目前已经下载完成的数据长度

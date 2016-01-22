@@ -11,20 +11,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.rapid.jason.rapidnetwork.FreeLoad.core.RequestQueue;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.DownloadRequest;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.Freeload;
 import com.rapid.jason.rapidnetwork.R;
-
-import java.io.File;
 
 import de.greenrobot.event.EventBus;
 
 public class DownloadActivity extends ActionBarActivity {
 
     private Button button = null;
-
-    private File mDownloadFile;
 
     private String Url = "http://gdown.baidu.com/data/wisegame/f70d2a17410e25a8/shoujiyingyongshichang_1.apk";
 
@@ -38,20 +33,11 @@ public class DownloadActivity extends ActionBarActivity {
         EventBus.getDefault().register(this);
         requestQueue = Freeload.newRequestQueue(this);
 
-        String DownloadPath = Environment.getExternalStorageDirectory().getAbsolutePath();;
-        DownloadPath += "/try/";
-        mDownloadFile = new File(DownloadPath);
-
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadRequest request = new DownloadRequest(Url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        return;
-                    }
-                });
+                DownloadRequest request = new DownloadRequest(Url);
                 requestQueue.add(request);
             }
         });

@@ -7,7 +7,9 @@ import com.rapid.jason.rapidnetwork.FreeLoad.core.RequestQueue;
 public class Freeload {
 
     public static RequestQueue newRequestQueue(Context context) {
-        RequestQueue queue = new RequestQueue();
+        BasicDownload basicDownload = new BasicDownload();
+
+        RequestQueue queue = new RequestQueue(basicDownload);
         queue.start();
 
         return queue;
