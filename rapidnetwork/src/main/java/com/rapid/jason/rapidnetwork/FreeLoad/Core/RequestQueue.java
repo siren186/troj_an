@@ -1,6 +1,7 @@
 package com.rapid.jason.rapidnetwork.FreeLoad.core;
 
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.BasicDownload;
+import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.PrepareDownload;
 
 import java.util.HashSet;
 import java.util.Queue;
@@ -25,12 +26,16 @@ public class RequestQueue {
     /** Download interface for performing requests. */
     private final BasicDownload mDownload;
 
-    public RequestQueue(BasicDownload basicDownload) {
-        this(basicDownload, DEFAULT_DOWNLOAD_THREAD_POOL_SIZE);
+    /** The prepare interface for prepare download. */
+    private final PrepareDownload mPrepare;
+
+    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload) {
+        this(basicDownload, prepareDownload, DEFAULT_DOWNLOAD_THREAD_POOL_SIZE);
     }
 
-    public RequestQueue(BasicDownload basicDownload, int threadPoolSize) {
+    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, int threadPoolSize) {
         this.mDownload = basicDownload;
+        this.mPrepare = prepareDownload;
         this.mDispatchers = new DownloadDispatcher[threadPoolSize];
     }
 
@@ -50,7 +55,7 @@ public class RequestQueue {
         // Create network dispatchers (and corresponding threads) up to the pool size.
         for (int i = 0; i < mDispatchers.length; i++) {
             DownloadDispatcher downloadDispatcher =
-                    new DownloadDispatcher(mDownloadQueue, mDownload);
+                    new DownloadDispatcher(mDownloadQueue, mDownload, mPrepare);
             mDispatchers[i] = downloadDispatcher;
             downloadDispatcher.start();
         }

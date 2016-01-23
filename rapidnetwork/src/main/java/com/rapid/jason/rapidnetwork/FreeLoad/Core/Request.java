@@ -10,7 +10,7 @@ import java.net.URL;
 public abstract class Request<T> implements Comparable<Request<T>> {
 
     /** Sequence number of this request, used to enforce FIFO ordering. */
-    private Integer mSequence;
+    private Integer mSequence = 0;
 
     /** The request queue this request is associated with. */
     private RequestQueue mRequestQueue;
@@ -22,13 +22,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     private final String mUrl;
 
     /** save file in this request. */
-    private File mSaveFile;
+    private File mSaveFile = null;
 
     /** save file has been download length. */
-    private long mDownloadLength;
-
-    /** connect to get downloadfile head timeout count. */
-    private final static int CONNECT_TIMEOUT = 5 * 1000;
+    private long mDownloadLength = 0;
 
     /** download file name. */
     private final String mFileName;
@@ -43,59 +40,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         this.mDownloadLength = downloadLength;
     }
 
-    private boolean createFile(String fileName, String fileFolder) {
-        if (!createFolder(fileFolder)) {
-            return false;
-        }
 
-        this.mSaveFile = new File(fileFolder, fileName);
-
-        try {
-            RandomAccessFile randOut = new RandomAccessFile(this.mSaveFile, "rw");
-            if(this.mDownloadLength > 0) {
-                randOut.setLength(this.mDownloadLength);
-            }
-            randOut.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-    private boolean createFolder(String fileFolder) {
-        File folder = new File(fileFolder);
-        if (!createAndCheckFolder(folder)) {
-            return false;
-        }
-
-        if (!folder.isDirectory()) {
-            if (!folder.delete()) {
-                return false;
-            }
-        }
-
-        if (!createAndCheckFolder(folder)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean createAndCheckFolder(File folder) {
-        if (!folder.exists()) {
-            folder.mkdirs();
-        } else {
-            return true;
-        }
-
-        if (!folder.exists()) {
-            return false;
-        }
-        return true;
-    }
 
     public enum Priority {
         LOW,
@@ -176,6 +121,34 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         return mDownloadLength;
     }
 
+    /**
+     * @param downloadLength
+     */
+    public void setDownloadLength(long downloadLength) {
+        mDownloadLength = downloadLength;
+    }
+
+    /**
+     * @return download file name.
+     */
+    public String getFileName() {
+        return mFileName;
+    }
+
+    /**
+     * @return download folder name.
+     */
+    public String getFolderName() {
+        return mFileFolder;
+    }
+
+    /**
+     * @param saveFile the download file object;
+     */
+    public void setDownloadFile(File saveFile) {
+        mSaveFile = saveFile;
+    }
+
     @Override
     public int compareTo(Request<T> other) {
         Priority left = this.getPriority();
@@ -195,52 +168,5 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         if (mRequestQueue != null) {
             mRequestQueue.finish(this);
         }
-    }
-
-    public boolean preparePerform() {
-        if (!getFileSize()) {
-            return false;
-        }
-
-        if (!createFile(mFileName, mFileFolder)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean getFileSize() {
-        if (mDownloadLength > 0) {
-            return true;
-        }
-
-        try {
-            mDownloadLength = connectAndGetFileSize(mUrl);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return (mDownloadLength > 0);
-    }
-
-    public long connectAndGetFileSize(String urlString) throws Exception {
-        URL mUrl = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) mUrl.openConnection();
-        conn.setConnectTimeout(CONNECT_TIMEOUT);
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Accept-Encoding", "identity");
-        conn.setRequestProperty("Referer", urlString);
-        conn.setRequestProperty("Charset", "UTF-8");
-        conn.setRequestProperty("Connection", "Keep-Alive");
-        conn.connect();
-
-        long lenght = 0;
-        int responseCode = conn.getResponseCode();
-        if (responseCode == 200) {
-            lenght = conn.getContentLength();
-        }
-        conn.disconnect();
-
-        return lenght;
     }
 }

@@ -1,5 +1,6 @@
 package com.rapid.jason.rapidnetwork.DownloadFile;
 
+import android.app.Activity;
 import android.os.Environment;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
@@ -17,7 +18,7 @@ import com.rapid.jason.rapidnetwork.R;
 
 import de.greenrobot.event.EventBus;
 
-public class DownloadActivity extends ActionBarActivity {
+public class DownloadActivity extends Activity {
 
     private Button button = null;
 
@@ -45,6 +46,7 @@ public class DownloadActivity extends ActionBarActivity {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
