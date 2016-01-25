@@ -17,11 +17,11 @@ public class PrepareDownload implements Prepare {
 
     @Override
     public boolean preparePerform(Request<?> request) {
-        long downloadLength = getFileSize(request);
-        if (downloadLength <= 0) {
+        long downloadFileSize = getFileSize(request);
+        if (downloadFileSize <= 0) {
             return false;
         }
-        request.setDownloadLength(downloadLength);
+        request.setDownloadFileSize(downloadFileSize);
 
         File saveFile = createFile(request);
         if (saveFile == null) {
@@ -41,8 +41,8 @@ public class PrepareDownload implements Prepare {
 
         try {
             RandomAccessFile randOut = new RandomAccessFile(saveFile, "rw");
-            if(request.getDownloadLength() > 0) {
-                randOut.setLength(request.getDownloadLength());
+            if(request.getDownloadFileSize() > 0) {
+                randOut.setLength(request.getDownloadFileSize());
             }
             randOut.close();
         } catch (FileNotFoundException e) {
@@ -87,18 +87,18 @@ public class PrepareDownload implements Prepare {
     }
 
     private long getFileSize(Request<?> request) {
-        if (request.getDownloadLength() > 0) {
+        if (request.getDownloadFileSize() > 0) {
             return 0;
         }
 
-        long downloadLength = 0;
+        long downloadFileSize = 0;
         try {
-            downloadLength = connectAndGetFileSize(request);
+            downloadFileSize = connectAndGetFileSize(request);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return downloadLength;
+        return downloadFileSize;
     }
 
     private long connectAndGetFileSize(Request<?> request) throws Exception {

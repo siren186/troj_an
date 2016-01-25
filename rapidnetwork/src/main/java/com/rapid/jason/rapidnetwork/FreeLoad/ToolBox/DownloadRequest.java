@@ -12,20 +12,16 @@ public class DownloadRequest extends Request<String>{
     private final static String fileSaveDir = Environment.getExternalStorageDirectory() + "/freeload/downloadfile";
     private final static String fileSaveName = "shoujiyingyongshichang_1.apk";
 
-    public DownloadRequest(String Url) {
-        this(Url, fileSaveName);
+    public DownloadRequest(String Url, Response.Listener<String> listener) {
+        this(Url, fileSaveName, listener);
     }
 
-    public DownloadRequest(String Url, String fileName) {
-        this(Url, fileName, fileSaveDir);
+    public DownloadRequest(String Url, String fileName, Response.Listener<String> listener) {
+        this(Url, fileName, fileSaveDir, listener);
     }
 
-    public DownloadRequest(String Url, String fileName, String fileFolder) {
-        this(Url, fileName, fileFolder, 0);
-    }
-
-    public DownloadRequest(String Url, String fileName, String fileFolder, int downloadLength) {
-        this(Url, fileName, fileFolder, 0, null);
+    public DownloadRequest(String Url, String fileName, String fileFolder, Response.Listener<String> listener) {
+        this(Url, fileName, fileFolder, 0, listener);
     }
 
     public DownloadRequest(String Url, String fileName, String fileFolder, int downloadLength, Response.Listener<String> listener) {
@@ -35,6 +31,15 @@ public class DownloadRequest extends Request<String>{
 
     @Override
     protected void deliverResponse(String response) {
-        this.listener.onResponse(response);
+        if (this.listener != null) {
+            this.listener.onResponse(response);
+        }
+    }
+
+    @Override
+    public void deliverDownloadProgress(long fileSize, long downloadedSize) {
+        if (this.listener != null) {
+            this.listener.onProgressChange(fileSize, downloadedSize);
+        }
     }
 }

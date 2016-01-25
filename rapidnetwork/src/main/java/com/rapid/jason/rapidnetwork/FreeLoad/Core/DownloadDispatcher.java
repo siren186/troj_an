@@ -24,13 +24,18 @@ public class DownloadDispatcher extends Thread {
     /** The prepare interface for prepare download. */
     private final PrepareDownload mPrepare;
 
+    /** For posting responses and errors. */
+    private final ResponseDelivery mDelivery;
+
     /** Used for telling us to die. */
     private volatile boolean mQuit = false;
 
-    public DownloadDispatcher(BlockingQueue<Request<?>> queue, BasicDownload basicDownload, PrepareDownload prepareDownload) {
+    public DownloadDispatcher(BlockingQueue<Request<?>> queue, BasicDownload basicDownload,
+                              PrepareDownload prepareDownload, ResponseDelivery delivery) {
         this.mQueue = queue;
         this.mDownload = basicDownload;
         this.mPrepare = prepareDownload;
+        this.mDelivery = delivery;
     }
 
     public boolean isFinish() {
@@ -54,17 +59,18 @@ public class DownloadDispatcher extends Thread {
 
             // If the request was cancelled already, do not perform the download request.
             if (request.isCanceled()) {
-                request.finish("download-discard-cancelled");
+                request.finish();
                 continue;
             }
 
+            mDelivery.postResponse(request);
             boolean prepare = mPrepare.preparePerform(request);
             if (!prepare) {
                 continue;
             }
 
             EventBus.getDefault().post(new DownloadEvent("get job id:" + Thread.currentThread().getId()));
-            mDownload.performRequest(request);
+            mDownload.performRequest(request, mDelivery);
         }
     }
 

@@ -1,5 +1,8 @@
 package com.rapid.jason.rapidnetwork.FreeLoad.core;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.BasicDownload;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.PrepareDownload;
 
@@ -29,14 +32,22 @@ public class RequestQueue {
     /** The prepare interface for prepare download. */
     private final PrepareDownload mPrepare;
 
+    /** Response delivery mechanism. */
+    private final ResponseDelivery mDelivery;
+
     public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload) {
         this(basicDownload, prepareDownload, DEFAULT_DOWNLOAD_THREAD_POOL_SIZE);
     }
 
     public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, int threadPoolSize) {
+        this(basicDownload, prepareDownload, DEFAULT_DOWNLOAD_THREAD_POOL_SIZE, new ExecutorDelivery(new Handler(Looper.getMainLooper())));
+    }
+
+    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, int threadPoolSize, ResponseDelivery delivery) {
         this.mDownload = basicDownload;
         this.mPrepare = prepareDownload;
         this.mDispatchers = new DownloadDispatcher[threadPoolSize];
+        this.mDelivery = delivery;
     }
 
     /**
@@ -55,7 +66,8 @@ public class RequestQueue {
         // Create network dispatchers (and corresponding threads) up to the pool size.
         for (int i = 0; i < mDispatchers.length; i++) {
             DownloadDispatcher downloadDispatcher =
-                    new DownloadDispatcher(mDownloadQueue, mDownload, mPrepare);
+                    new DownloadDispatcher(mDownloadQueue, mDownload,
+                            mPrepare, mDelivery);
             mDispatchers[i] = downloadDispatcher;
             downloadDispatcher.start();
         }
@@ -98,7 +110,7 @@ public class RequestQueue {
     }
 
     /**
-     * Called from {@link Request#finish(String)}, indicating that processing of the given request
+     * Called from {@link Request#finish()}, indicating that processing of the given request
      * has finished.
      */
     <T> void finish(Request<T> request) {

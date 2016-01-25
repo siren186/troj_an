@@ -6,6 +6,9 @@ public class Response<T> {
     public interface Listener<T> {
         /** Called when a response is received. */
         public void onResponse(T response);
+
+        /** Called a download response progress. */
+        public void onProgressChange(long fileSize, long downloadedSize);
     }
 
     /** Callback interface for delivering error responses. */

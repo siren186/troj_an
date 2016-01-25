@@ -9,9 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rapid.jason.rapidnetwork.FreeLoad.core.RequestQueue;
+import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.DownloadRequest;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.Freeload;
 import com.rapid.jason.rapidnetwork.R;
@@ -26,6 +28,9 @@ public class DownloadActivity extends Activity {
 
     private RequestQueue requestQueue = null;
 
+    private TextView text = null;
+    private TextView text1 = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +39,26 @@ public class DownloadActivity extends Activity {
         EventBus.getDefault().register(this);
         requestQueue = Freeload.newRequestQueue(this);
 
+        text = (TextView) findViewById(R.id.textView);
+        text1 = (TextView) findViewById(R.id.textView1);
+
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadRequest request = new DownloadRequest(Url);
+                DownloadRequest request = new DownloadRequest(Url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+
+                    @Override
+                    public void onProgressChange(long fileSize, long downloadedSize) {
+                        text.setText("" + fileSize);
+                        text1.setText("" + downloadedSize);
+                        return;
+                    }
+                });
                 requestQueue.add(request);
             }
         });

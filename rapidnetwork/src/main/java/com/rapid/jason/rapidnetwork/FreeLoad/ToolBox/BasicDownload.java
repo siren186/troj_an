@@ -2,6 +2,7 @@ package com.rapid.jason.rapidnetwork.FreeLoad.toolbox;
 
 import com.rapid.jason.rapidnetwork.FreeLoad.core.Network;
 import com.rapid.jason.rapidnetwork.FreeLoad.core.Request;
+import com.rapid.jason.rapidnetwork.FreeLoad.core.ResponseDelivery;
 
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -15,9 +16,15 @@ public class BasicDownload implements Network {
 
     @Override
     public void performRequest(Request<?> request) {
+        performRequest(request, null);
+    }
+
+    @Override
+    public void performRequest(Request<?> request, ResponseDelivery delivery) {
         try {
             URL downloadUrl = new URL(request.getUrl());
-            long downLength = request.getDownloadLength();
+            long downLoadFileSize = request.getDownloadFileSize();
+            long downloadLength = 0;
 
             //使用Get方式下载
             HttpURLConnection http = (HttpURLConnection) downloadUrl.openConnection();
@@ -29,7 +36,7 @@ public class BasicDownload implements Network {
             http.setRequestProperty("Charset", "UTF-8");
 
             int startPos = 0;//开始位置
-            long endPos = downLength;//结束位置
+            long endPos = downLoadFileSize;//结束位置
             http.setRequestProperty("Range", "bytes=" + startPos + "-"+ endPos);//设置获取实体数据的范围
             http.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)");
             http.setRequestProperty("Connection", "Keep-Alive");
@@ -42,14 +49,16 @@ public class BasicDownload implements Network {
 
             while ((offset = inStream.read(buffer, 0, 1024)) != -1) {
                 threadfile.write(buffer, 0, offset);
-                downLength += offset;
+                downloadLength += offset;
+
+                if (delivery != null) {
+                    delivery.postDownloadProgress(request, downLoadFileSize, downloadLength);
+                }
             }
 
             threadfile.close();
             inStream.close();
-//            this.finish = true;
         } catch (Exception e) {
-//            this.downLength = -1;
         }
     }
 }
