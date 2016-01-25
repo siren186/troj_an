@@ -7,7 +7,6 @@ import android.widget.ListView;
 
 import com.rapid.jason.rapidnetwork.ListViewUtil.BaseCardsAdapter;
 import com.rapid.jason.rapidnetwork.ListViewUtil.BaseCardsView;
-import com.rapid.jason.rapidnetwork.ListViewUtil.MessageEvent;
 
 import de.greenrobot.event.EventBus;
 

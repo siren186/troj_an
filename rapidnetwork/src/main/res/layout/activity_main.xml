@@ -22,4 +22,22 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/volley_neticon_btn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sliding_Tabs(provisional)"
+        android:id="@+id/volley_sliding_tabs_btn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/volley_traversal_file_btn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FreeLoad_File"
+        android:id="@+id/volley_free_load_btn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/volley_sliding_tabs_btn"/>
 </RelativeLayout>

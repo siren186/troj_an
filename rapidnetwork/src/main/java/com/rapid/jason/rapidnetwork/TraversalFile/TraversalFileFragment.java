@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.rapid.jason.rapidnetwork.ListViewUtil.MessageEvent;
 import com.rapid.jason.rapidnetwork.R;
 
 import java.io.File;
