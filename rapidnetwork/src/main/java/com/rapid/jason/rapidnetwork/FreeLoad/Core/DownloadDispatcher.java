@@ -63,8 +63,7 @@ public class DownloadDispatcher extends Thread {
                 continue;
             }
 
-            mDelivery.postResponse(request);
-            boolean prepare = mPrepare.preparePerform(request);
+            boolean prepare = mPrepare.preparePerform(request, mDelivery);
             if (!prepare) {
                 continue;
             }

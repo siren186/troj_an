@@ -2,6 +2,8 @@ package com.rapid.jason.rapidnetwork.FreeLoad.toolbox;
 
 import com.rapid.jason.rapidnetwork.FreeLoad.core.Prepare;
 import com.rapid.jason.rapidnetwork.FreeLoad.core.Request;
+import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
+import com.rapid.jason.rapidnetwork.FreeLoad.core.ResponseDelivery;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,13 +18,15 @@ public class PrepareDownload implements Prepare {
     private final static int CONNECT_TIMEOUT = 5 * 1000;
 
     @Override
-    public boolean preparePerform(Request<?> request) {
+    public boolean preparePerform(Request<?> request, ResponseDelivery delivery) {
+        postResponse(delivery, request, "get file size");
         long downloadFileSize = getFileSize(request);
         if (downloadFileSize <= 0) {
             return false;
         }
         request.setDownloadFileSize(downloadFileSize);
 
+        postResponse(delivery, request, "create file");
         File saveFile = createFile(request);
         if (saveFile == null) {
             return false;
@@ -30,6 +34,13 @@ public class PrepareDownload implements Prepare {
         request.setDownloadFile(saveFile);
 
         return true;
+    }
+
+    private void postResponse(ResponseDelivery delivery, Request<?> request, String state) {
+        if (delivery == null) {
+            return;
+        }
+        delivery.postResponse(request, Response.success(state));
     }
 
     private File createFile(Request<?> request) {

@@ -16,6 +16,12 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /** Whether or not this request has been canceled. */
     private boolean mCanceled = false;
 
+    /** Unique id for download. */
+    private final int mId;
+
+    /** download start position. */
+    private int mDownloadStart;
+
     /** URL of this request. */
     private final String mUrl;
 
@@ -33,8 +39,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
     private final static String fileSaveDir = Environment.getExternalStorageDirectory() + "/freeload/downloadfile";
 
-    protected Request(String Url, String fileName, String fileFolder, int downloadFileSize) {
+    protected Request(int id, String Url, int downloadStart, String fileName, String fileFolder, int downloadFileSize) {
+        this.mId = id;
         this.mUrl = Url;
+        this.mDownloadStart = downloadStart;
         this.mDownloadFileSize = downloadFileSize;
 
         this.mFileFolder = setFileFolder(fileFolder);
@@ -126,6 +134,24 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      */
     public String getUrl() {
         return mUrl;
+    }
+
+    /**
+     * Returns the id of this request.
+     */
+    public int getId() {
+        return mId;
+    }
+
+    /**
+     * Returns the start position of this request download.
+     */
+    public int getDownloadStart() {
+        return mDownloadStart;
+    }
+
+    public void setDownloadStart(int downloadStart) {
+        this.mDownloadStart = downloadStart;
     }
 
     /**

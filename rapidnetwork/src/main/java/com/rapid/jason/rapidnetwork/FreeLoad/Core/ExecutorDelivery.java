@@ -25,7 +25,7 @@ public class ExecutorDelivery implements ResponseDelivery {
 
     @Override
     public void postResponse(Request<?> request) {
-        postResponse(request, null, null);
+        postResponse(request, null);
     }
 
     @Override
@@ -83,24 +83,24 @@ public class ExecutorDelivery implements ResponseDelivery {
         @Override
         public void run() {
             // If this request has canceled, finish it and don't deliver.
-            if (mRequest.isCanceled()) {
-                mRequest.finish();
-                return;
-            }
-
+//            if (mRequest.isCanceled()) {
+//                mRequest.finish();
+//                return;
+//            }
+//
             // Deliver a normal response or error, depending.
             if (mResponse != null) {
                 mRequest.deliverResponse(mResponse.result);
             }
-            
-            // If this is an intermediate response, add a marker, otherwise we're done
-            // and the request can be finished.
-            mRequest.finish();
-
-            // If we have been provided a post-delivery runnable, run it.
-            if (mRunnable != null) {
-                mRunnable.run();
-            }
+//
+//            // If this is an intermediate response, add a marker, otherwise we're done
+//            // and the request can be finished.
+//            mRequest.finish();
+//
+//            // If we have been provided a post-delivery runnable, run it.
+//            if (mRunnable != null) {
+//                mRunnable.run();
+//            }
         }
     }
 }

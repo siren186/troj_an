@@ -25,6 +25,7 @@ import de.greenrobot.event.EventBus;
 public class DownloadActivity extends Activity {
 
     private Button button = null;
+    private Button button2 = null;
 
     private String Url = "http://gdown.baidu.com/data/wisegame/f70d2a17410e25a8/shoujiyingyongshichang_1.apk";
 
@@ -35,6 +36,10 @@ public class DownloadActivity extends Activity {
 
     private FreeloadDbManager dbManager = null;
     private DownloadFileDb fileDownload = null;
+
+    private DownloadRequest request = null;
+
+    private int mDownloadSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +54,27 @@ public class DownloadActivity extends Activity {
         text = (TextView) findViewById(R.id.textView);
         text1 = (TextView) findViewById(R.id.textView1);
 
+        fileDownload = new DownloadFileDb(1, "shoujiyingyongshichang_1.apk", 0, 1);
+        dbManager.insert(fileDownload);
+
+        button2 = (Button) findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                request.cancel();
+            }
+        });
+
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadRequest request = new DownloadRequest(Url, new Response.Listener<String>() {
+                request = new DownloadRequest(1, Url, mDownloadSize, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        EventBus.getDefault().post(new DownloadEvent(response));
+                        return;
                     }
 
                     @Override
@@ -64,18 +82,15 @@ public class DownloadActivity extends Activity {
                         text.setText("" + fileSize);
                         text1.setText("" + downloadedSize);
 
-                        ContentValues values = new ContentValues();
-                        values.put("downloadstart", downloadedSize);
+//                        ContentValues values = new ContentValues();
+//                        values.put("downloadstart", downloadedSize);
+//                        dbManager.updateById(DownloadFileDb.class, values, 1);
 
-                        dbManager.updateById(DownloadFileDb.class, values, 1);
+                        mDownloadSize = (int) downloadedSize;
 
                         return;
                     }
                 });
-
-                fileDownload = new DownloadFileDb(1, "name", (int)0, 1);
-                dbManager.insert(fileDownload);
-
                 requestQueue.add(request);
             }
         });

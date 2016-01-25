@@ -9,20 +9,24 @@ public class DownloadRequest extends Request<String>{
 
     private final Response.Listener<String> listener;
 
-    public DownloadRequest(String Url, Response.Listener<String> listener) {
-        this(Url, null, listener);
+    public DownloadRequest(int id, String Url, Response.Listener<String> listener) {
+        this(id, Url, 0, listener);
     }
 
-    public DownloadRequest(String Url, String fileName, Response.Listener<String> listener) {
-        this(Url, fileName, null, listener);
+    public DownloadRequest(int id, String Url, int downloadStart, Response.Listener<String> listener) {
+        this(id, Url, downloadStart, null, listener);
     }
 
-    public DownloadRequest(String Url, String fileName, String fileFolder, Response.Listener<String> listener) {
-        this(Url, fileName, fileFolder, 0, listener);
+    public DownloadRequest(int id, String Url, int downloadStart, String fileName, Response.Listener<String> listener) {
+        this(id, Url, downloadStart, fileName, null, listener);
     }
 
-    public DownloadRequest(String Url, String fileName, String fileFolder, int downloadLength, Response.Listener<String> listener) {
-        super(Url, fileName, fileFolder, downloadLength);
+    public DownloadRequest(int id, String Url, int downloadStart, String fileName, String fileFolder, Response.Listener<String> listener) {
+        this(id, Url, downloadStart, fileName, fileFolder, 0, listener);
+    }
+
+    public DownloadRequest(int id, String Url, int downloadStart, String fileName, String fileFolder, int downloadLength, Response.Listener<String> listener) {
+        super(id, Url, downloadStart, fileName, fileFolder, downloadLength);
         this.listener = listener;
     }
 

@@ -5,5 +5,5 @@ package com.rapid.jason.rapidnetwork.FreeLoad.core;
  * Action prepare before download.
  */
 public interface Prepare {
-    public boolean preparePerform(Request<?> request);
+    public boolean preparePerform(Request<?> request, ResponseDelivery delivery);
 }
