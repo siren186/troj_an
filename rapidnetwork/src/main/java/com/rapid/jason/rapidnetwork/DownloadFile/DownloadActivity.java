@@ -1,6 +1,7 @@
 package com.rapid.jason.rapidnetwork.DownloadFile;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.os.Environment;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.rapid.jason.rapidnetwork.FreeLoad.core.RequestQueue;
 import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
+import com.rapid.jason.rapidnetwork.FreeLoad.dbtool.FreeloadDbManager;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.DownloadRequest;
 import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.Freeload;
 import com.rapid.jason.rapidnetwork.R;
@@ -31,6 +33,9 @@ public class DownloadActivity extends Activity {
     private TextView text = null;
     private TextView text1 = null;
 
+    private FreeloadDbManager dbManager = null;
+    private DownloadFileDb fileDownload = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,8 @@ public class DownloadActivity extends Activity {
 
         EventBus.getDefault().register(this);
         requestQueue = Freeload.newRequestQueue(this);
+
+        dbManager = new FreeloadDbManager(this, "freeload.db", 1, DownloadFileDb.class);
 
         text = (TextView) findViewById(R.id.textView);
         text1 = (TextView) findViewById(R.id.textView1);
@@ -56,9 +63,19 @@ public class DownloadActivity extends Activity {
                     public void onProgressChange(long fileSize, long downloadedSize) {
                         text.setText("" + fileSize);
                         text1.setText("" + downloadedSize);
+
+                        ContentValues values = new ContentValues();
+                        values.put("downloadstart", downloadedSize);
+
+                        dbManager.updateById(DownloadFileDb.class, values, 1);
+
                         return;
                     }
                 });
+
+                fileDownload = new DownloadFileDb(1, "name", (int)0, 1);
+                dbManager.insert(fileDownload);
+
                 requestQueue.add(request);
             }
         });

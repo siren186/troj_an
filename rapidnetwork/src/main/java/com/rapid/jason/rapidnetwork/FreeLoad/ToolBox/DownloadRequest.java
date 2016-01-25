@@ -9,15 +9,12 @@ public class DownloadRequest extends Request<String>{
 
     private final Response.Listener<String> listener;
 
-    private final static String fileSaveDir = Environment.getExternalStorageDirectory() + "/freeload/downloadfile";
-    private final static String fileSaveName = "shoujiyingyongshichang_1.apk";
-
     public DownloadRequest(String Url, Response.Listener<String> listener) {
-        this(Url, fileSaveName, listener);
+        this(Url, null, listener);
     }
 
     public DownloadRequest(String Url, String fileName, Response.Listener<String> listener) {
-        this(Url, fileName, fileSaveDir, listener);
+        this(Url, fileName, null, listener);
     }
 
     public DownloadRequest(String Url, String fileName, String fileFolder, Response.Listener<String> listener) {

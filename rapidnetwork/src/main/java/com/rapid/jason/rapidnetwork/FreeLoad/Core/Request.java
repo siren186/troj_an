@@ -1,5 +1,8 @@
 package com.rapid.jason.rapidnetwork.FreeLoad.core;
 
+import android.net.Uri;
+import android.os.Environment;
+
 import java.io.File;
 
 public abstract class Request<T> implements Comparable<Request<T>> {
@@ -28,11 +31,36 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /** download file parent folder. */
     private final String mFileFolder;
 
+    private final static String fileSaveDir = Environment.getExternalStorageDirectory() + "/freeload/downloadfile";
+
     protected Request(String Url, String fileName, String fileFolder, int downloadFileSize) {
         this.mUrl = Url;
-        this.mFileName = fileName;
-        this.mFileFolder = fileFolder;
         this.mDownloadFileSize = downloadFileSize;
+
+        this.mFileFolder = setFileFolder(fileFolder);
+        this.mFileName = setFileName(Url, fileName);
+    }
+
+    private String setFileFolder(String fileFolder) {
+        String downloadFileFolder;
+        if (fileFolder == null) {
+            downloadFileFolder = fileSaveDir;
+        } else {
+            downloadFileFolder = fileFolder;
+        }
+        return downloadFileFolder;
+    }
+
+    private String setFileName(String Url, String fileName) {
+        String downloadFileName;
+        if (fileName == null) {
+            Uri uri = Uri.parse(Url);
+            String strPath = uri.getPath();
+            downloadFileName = strPath.substring(strPath.lastIndexOf('/') + 1, strPath.length());
+        } else {
+            downloadFileName = fileName;
+        }
+        return downloadFileName;
     }
 
     public enum Priority {
