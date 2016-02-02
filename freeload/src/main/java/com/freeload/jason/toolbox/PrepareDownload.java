@@ -1,9 +1,9 @@
 package com.freeload.jason.toolbox;
 
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Prepare;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Request;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.ResponseDelivery;
+import com.freeload.jason.core.Prepare;
+import com.freeload.jason.core.Request;
+import com.freeload.jason.core.Response;
+import com.freeload.jason.core.ResponseDelivery;
 
 import java.io.File;
 import java.io.FileNotFoundException;

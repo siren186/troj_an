@@ -1,9 +1,9 @@
 package com.freeload.jason.toolbox;
 
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Network;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Request;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.ResponseDelivery;
+import com.freeload.jason.core.Network;
+import com.freeload.jason.core.Request;
+import com.freeload.jason.core.Response;
+import com.freeload.jason.core.ResponseDelivery;
 
 import java.io.InputStream;
 import java.io.RandomAccessFile;

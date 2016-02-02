@@ -2,7 +2,7 @@ package com.freeload.jason.toolbox;
 
 import android.content.Context;
 
-import com.rapid.jason.rapidnetwork.FreeLoad.core.RequestQueue;
+import com.freeload.jason.core.RequestQueue;
 
 public class Freeload {
 

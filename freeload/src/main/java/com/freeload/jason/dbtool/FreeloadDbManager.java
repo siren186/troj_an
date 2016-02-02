@@ -5,9 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.rapid.jason.rapidnetwork.DownloadFile.DownloadActivity;
-import com.rapid.jason.rapidnetwork.DownloadFile.DownloadFileDb;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

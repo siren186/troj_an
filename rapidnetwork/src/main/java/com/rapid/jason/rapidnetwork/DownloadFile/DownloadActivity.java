@@ -1,10 +1,6 @@
 package com.rapid.jason.rapidnetwork.DownloadFile;
 
 import android.app.Activity;
-import android.content.ContentValues;
-import android.os.Environment;
-import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,11 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rapid.jason.rapidnetwork.FreeLoad.core.RequestQueue;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
-import com.rapid.jason.rapidnetwork.FreeLoad.dbtool.FreeloadDbManager;
-import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.DownloadRequest;
-import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.Freeload;
+import com.freeload.jason.core.RequestQueue;
+import com.freeload.jason.core.Response;
+import com.freeload.jason.dbtool.FreeloadDbManager;
+import com.freeload.jason.toolbox.DownloadRequest;
+import com.freeload.jason.toolbox.Freeload;
 import com.rapid.jason.rapidnetwork.R;
 
 import de.greenrobot.event.EventBus;

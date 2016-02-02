@@ -1,15 +1,12 @@
 package com.freeload.jason.core;
 
-import android.os.*;
 import android.os.Process;
+import android.os.SystemClock;
 
-import com.rapid.jason.rapidnetwork.DownloadFile.DownloadEvent;
-import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.BasicDownload;
-import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.PrepareDownload;
+import com.freeload.jason.toolbox.BasicDownload;
+import com.freeload.jason.toolbox.PrepareDownload;
 
 import java.util.concurrent.BlockingQueue;
-
-import de.greenrobot.event.EventBus;
 
 public class DownloadDispatcher extends Thread {
 
@@ -68,7 +65,6 @@ public class DownloadDispatcher extends Thread {
                 continue;
             }
 
-            EventBus.getDefault().post(new DownloadEvent("get job id:" + Thread.currentThread().getId()));
             mDownload.performRequest(request, mDelivery);
         }
     }

@@ -1,7 +1,7 @@
 package com.freeload.jason.toolbox;
 
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Response;
-import com.rapid.jason.rapidnetwork.FreeLoad.core.Request;
+import com.freeload.jason.core.Request;
+import com.freeload.jason.core.Response;
 
 public class DownloadRequest extends Request<String>{
 

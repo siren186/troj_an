@@ -3,8 +3,8 @@ package com.freeload.jason.core;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.BasicDownload;
-import com.rapid.jason.rapidnetwork.FreeLoad.toolbox.PrepareDownload;
+import com.freeload.jason.toolbox.BasicDownload;
+import com.freeload.jason.toolbox.PrepareDownload;
 
 import java.util.HashSet;
 import java.util.Set;

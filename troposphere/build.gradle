@@ -27,15 +27,15 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.0'
 }
 
-//<PRE> ÒÔÏÂÄÚÈİÓÃÓÚÉú³Éjar°ü
-// ÓÃ·¨:
-//  ÔÚTerminalÖĞÖ´ĞĞÒÔÏÂÒ»ÌõÖ¸Áî¼´¿ÉÉú³É
+//<PRE> ä»¥ä¸‹å†…å®¹ç”¨äºç”ŸæˆjaråŒ…
+// ç”¨æ³•:
+//  åœ¨Terminalä¸­æ‰§è¡Œä»¥ä¸‹ä¸€æ¡æŒ‡ä»¤å³å¯ç”Ÿæˆ
 //  gradlew makeJar
-// ³£¼û´íÎó¼°½â¾ö·½Ê½
-//  1. ÕÒ²»µ½tools.jar
-//      ½â¾ö: ±£Ö¤»·¾³±äÁ¿JAVA_HOME,CLASSPATH,PATH·Ö±ğÖ¸ÏòjdkµÄËùÔÚÄ¿Â¼,libÄ¿Â¼¼°binÄ¿Â¼
+// å¸¸è§é”™è¯¯åŠè§£å†³æ–¹å¼
+//  1. æ‰¾ä¸åˆ°tools.jar
+//      è§£å†³: ä¿è¯ç¯å¢ƒå˜é‡JAVA_HOME,CLASSPATH,PATHåˆ†åˆ«æŒ‡å‘jdkçš„æ‰€åœ¨ç›®å½•,libç›®å½•åŠbinç›®å½•
 //  2. Unable to start the daemon process
-//      ½â¾ö: ÕÒµ½c:\Users\ÓÃ»§Ãû\.gradle\gradle.propertiesÎÄ¼ş.½«Öµ¸ÄÎªÒÔÏÂÄÚÈİ:
+//      è§£å†³: æ‰¾åˆ°c:\Users\ç”¨æˆ·å\.gradle\gradle.propertiesæ–‡ä»¶.å°†å€¼æ”¹ä¸ºä»¥ä¸‹å†…å®¹:
 //      org.gradle.jvmargs=-Xmx512m
 
 task makeJar(type: Copy) {
@@ -47,4 +47,4 @@ task makeJar(type: Copy) {
 }
 makeJar.dependsOn(build)
 
-//</PRE> ÒÔÉÏÄÚÈİÓÃÓÚÉú³Éjar°ü
+//</PRE> ä»¥ä¸Šå†…å®¹ç”¨äºç”ŸæˆjaråŒ…
