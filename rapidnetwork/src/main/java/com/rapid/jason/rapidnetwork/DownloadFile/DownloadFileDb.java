@@ -6,9 +6,6 @@ public class DownloadFileDb {
     private int downloadStart;
     private int downloadState;
 
-    public DownloadFileDb() {
-    }
-
     public DownloadFileDb(int id, String fileName, int downloadStart, int downloadState) {
         this.mId = id;
         this.fileName = fileName;
@@ -50,7 +47,7 @@ public class DownloadFileDb {
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "downloadfile{" +
                 "id=" + mId +
                 ", fileName='" + fileName + '\'' +
                 ", downloadstart=" + downloadStart +
