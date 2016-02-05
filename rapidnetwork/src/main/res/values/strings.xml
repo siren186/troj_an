@@ -6,4 +6,5 @@
     <string name="title_activity_apk_icon">ApkIconActivity</string>
     <string name="title_activity_traversal_file">TraversalFileActivity</string>
     <string name="title_activity_download">DownloadActivity</string>
+    <string name="title_activity_list_word">ListWordActivity</string>
 </resources>

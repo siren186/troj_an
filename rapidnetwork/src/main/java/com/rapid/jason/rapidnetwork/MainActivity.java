@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.rapid.jason.rapidnetwork.DownloadFile.DownloadActivity;
+import com.rapid.jason.rapidnetwork.ListWordCard.ListWordActivity;
 import com.rapid.jason.rapidnetwork.NetworkIcon.ApkIconActivity;
 import com.rapid.jason.rapidnetwork.TraversalFile.TraversalFileActivity;
 
@@ -19,6 +20,7 @@ public class MainActivity extends ActionBarActivity {
 
     Button btnVolleySlidingTabs = null;
     Button btnVolleyFreeload = null;
+    Button btnListWordCards = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,15 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DownloadActivity.class);
+                startActivity (intent);
+            }
+        });
+
+        btnListWordCards = (Button) findViewById(R.id.list_word_cards_btn);
+        btnListWordCards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ListWordActivity.class);
                 startActivity (intent);
             }
         });
