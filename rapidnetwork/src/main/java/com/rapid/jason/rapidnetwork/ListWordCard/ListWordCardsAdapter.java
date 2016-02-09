@@ -7,19 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.rapid.jason.rapidnetwork.ListViewUtil.BaseCardsAdapter;
+import com.rapid.jason.rapidnetwork.ListViewUtil.BaseViewHolder;
 import com.rapid.jason.rapidnetwork.R;
-
-import java.util.HashMap;
 
 public class ListWordCardsAdapter extends BaseCardsAdapter {
 
     private final static String TAG = ListWordCardsAdapter.class.getName();
 
     private Context mContext;
-
-    private class ViewHolder {
-        TextView showText;
-    }
 
     public ListWordCardsAdapter(Context context) {
         this.mContext = context;
@@ -56,20 +51,14 @@ public class ListWordCardsAdapter extends BaseCardsAdapter {
             return;
         }
 
-        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-        if (viewHolder == null) {
-            return;
-        }
-        viewHolder.showText.setText((String) (position + ""));
+        TextView textView = BaseViewHolder.get(convertView).getView(R.id.tv_filename);
+        textView.setText((String) (position + ""));
     }
 
     private View getConvertView(ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View convertView = inflater.inflate(R.layout.list_word_card_layout, parent, false);
-        ViewHolder holder = new ViewHolder();
-        holder.showText = (TextView) convertView.findViewById(R.id.tv_filename);
-        convertView.setTag(holder);
 
         return convertView;
     }
