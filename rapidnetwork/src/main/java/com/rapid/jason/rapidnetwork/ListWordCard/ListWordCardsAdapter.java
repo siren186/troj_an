@@ -1,7 +1,6 @@
 package com.rapid.jason.rapidnetwork.ListWordCard;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.TextView;
 
 import com.rapid.jason.rapidnetwork.ListViewUtil.BaseCardsAdapter;
