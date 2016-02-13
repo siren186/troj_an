@@ -38,7 +38,7 @@ public class ListWordActivityFragment extends Fragment implements SlideCutListVi
         listWordCardsView = new ListWordCardsView(lvCard, this.getContext());
 
         mItemsLists = new ArrayList<HashMap<String, Object>>();
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 15; ++i) {
             HashMap<String, Object> hashMap = new HashMap<String, Object>();
             hashMap.put("fullpath", i + "");
             hashMap.put("filename", i + "");
