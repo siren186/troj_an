@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -38,6 +40,10 @@
         <activity
             android:name=".ListWordCard.ListWordActivity"
             android:label="@string/title_activity_list_word" >
+        </activity>
+        <activity
+            android:name=".FloatWindow.FloatWinActivity"
+            android:label="@string/title_activity_float_win" >
         </activity>
     </application>
 

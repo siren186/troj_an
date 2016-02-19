@@ -49,4 +49,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/volley_free_load_btn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Float_Windows"
+        android:id="@+id/float_win_btn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/list_word_cards_btn"/>
 </RelativeLayout>
