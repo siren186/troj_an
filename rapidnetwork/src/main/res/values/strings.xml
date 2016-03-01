@@ -8,4 +8,10 @@
     <string name="title_activity_download">DownloadActivity</string>
     <string name="title_activity_list_word">ListWordActivity</string>
     <string name="title_activity_float_win">FloatWinActivity</string>
+    <string name="appwidget_text">小工具</string>
+    <string name="add_widget">Add widget</string>
+
+    <string name="calendarbtn">打开日历</string>
+    <string name="timebtn">打开时间</string>
+    <string name="networkbtn">打开网络</string>
 </resources>
