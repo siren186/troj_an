@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.widget.Button;
 import android.widget.RemoteViews;
 
+import com.rapid.jason.rapidnetwork.FloatWindow.WindowUtils;
 import com.rapid.jason.rapidnetwork.MainActivity;
 import com.rapid.jason.rapidnetwork.R;
 
@@ -66,6 +67,7 @@ public class AppWidget extends AppWidgetProvider {
         setOpenSJZSInfo(context, views);
         setOpenCalendar(context, views);
         setFastCall(context, views);
+        setFloatwin(context, views);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -118,6 +120,23 @@ public class AppWidget extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         views.setOnClickPendingIntent(R.id.btn_fastcall, pendingIntent);
+    }
+
+    private void setCollection(Context context, RemoteViews views) {
+//        Uri phoneCallURI = Uri.parse("tel:552");
+//        Intent intent =  new Intent(Intent.ACTION_CALL, phoneCallURI);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+//
+//        views.setOnClickPendingIntent(R.id.btn_collection, pendingIntent);
+    }
+
+    private void setFloatwin(Context context, RemoteViews views) {
+//        Intent intent =  new Intent();
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+//
+//        WindowUtils.showPopupWindow(context.getApplicationContext());
+//
+//        views.setOnClickPendingIntent(R.id.btn_floatwin, pendingIntent);
     }
 }
 
