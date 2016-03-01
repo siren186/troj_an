@@ -92,13 +92,13 @@
 
         <ImageButton
             android:id="@+id/btn_floatwin"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_weight="1"
             android:text="552"
             android:background="@drawable/floatwin"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/btn_collection" />
+            android:layout_below="@+id/btn_network"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
 </RelativeLayout>
