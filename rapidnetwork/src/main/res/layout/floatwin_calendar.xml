@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/floatwin_calendar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/White">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/Black"
+            android:orientation="horizontal"
+            android:gravity="right|center_vertical">
+
+            <ImageButton
+                android:id="@+id/floatwin_calendar_btn_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_menu_close_clear_cancel"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <CalendarView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/calendarView" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

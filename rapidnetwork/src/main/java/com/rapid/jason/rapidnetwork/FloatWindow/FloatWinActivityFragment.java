@@ -18,6 +18,10 @@ public class FloatWinActivityFragment extends Fragment {
     private Handler mHandler = null;
     private Button mButton = null;
 
+    private WindowUtils windowUtils = null;
+
+    private FloatWinCalendar floatWinCalendar = null;
+
     public FloatWinActivityFragment() {
     }
 
@@ -27,6 +31,9 @@ public class FloatWinActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_float_win, container, false);
 
         mHandler = new Handler();
+        windowUtils = new WindowUtils();
+
+        floatWinCalendar = new FloatWinCalendar();
 
         mButton = (Button) view.findViewById(R.id.button3);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -35,7 +42,8 @@ public class FloatWinActivityFragment extends Fragment {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        WindowUtils.showPopupWindow(FloatWinActivityFragment.this.getActivity());
+                        windowUtils.showPopupWindow(FloatWinActivityFragment.this.getActivity());
+                        //floatWinCalendar.showFloatWinCalendar(FloatWinActivityFragment.this.getActivity());
                     }
                 }, 1000);
             }

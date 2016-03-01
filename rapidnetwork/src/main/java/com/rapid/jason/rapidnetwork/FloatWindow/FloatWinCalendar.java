@@ -3,38 +3,31 @@ package com.rapid.jason.rapidnetwork.FloatWindow;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.media.Image;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.rapid.jason.rapidnetwork.R;
 
-public class WindowUtils {
+public class FloatWinCalendar {
 
-    private final String LOG_TAG = WindowUtils.class.getSimpleName();
+    private final String LOG_TAG = FloatWinCalendar.class.getSimpleName();
     private View mView = null;
     private WindowManager mWindowManager = null;
     private Context mContext = null;
 
-    public Boolean isShown = false;
+    private Boolean isShown = false;
 
     private WindowManager.LayoutParams params = null;
 
-    private float mTouchStartX = 0;
-    private float mTouchStartY = 0;
+    private View mWindowView = null;
 
-    private FloatWinCalendar floatWinCalendar = null;
-    private View popupWindowView = null;
+    private ImageButton mCloseBtn = null;
 
-    private FloatView mFloatView = null;
-
-    public void showPopupWindow(final Context context) {
+    public void showFloatWinCalendar(final Context context) {
         if (isShown) {
             return;
         }
@@ -42,10 +35,12 @@ public class WindowUtils {
         isShown = true;
 
         // 获取应用的Context
-        mContext = context;
+        mContext = context.getApplicationContext();
         // 获取WindowManager
         mWindowManager = (WindowManager) mContext
                 .getSystemService(Context.WINDOW_SERVICE);
+
+        mView = setUpView(context);
 
         params = new WindowManager.LayoutParams();
 
@@ -65,47 +60,65 @@ public class WindowUtils {
         // 设置 FLAG_NOT_FOCUSABLE 悬浮窗口较小时，后面的应用图标由不可长按变为可长按
         // 不设置这个flag的话，home页的划屏会有问题
 
-        params.gravity = Gravity.LEFT | Gravity.TOP;
-        params.width = 200;
-        params.height = 200;
+        /*params.width = 300;*/
+        params.height = 900;
 
         params.x = 0;
         params.y = 0;
 
-        mView = setUpView(context);
-        mFloatView.setFloatWin(params);
+        params.gravity = Gravity.CENTER;
 
         mWindowManager.addView(mView, params);
     }
 
-    public void hidePopupWindow() {
+    public void hideFloatWinCalendar() {
         if (isShown && null != mView) {
             mWindowManager.removeView(mView);
             isShown = false;
         }
     }
 
-    public void updateView(int x, int y) {
-        params.x = x;
-        params.y = y;
-        mWindowManager.updateViewLayout(mView, params);
+    private View setUpView(final Context context) {
+        View view = null;
+        view = LayoutInflater.from(context).inflate(R.layout.floatwin_calendar, null);
+
+        setTouchAction(view);
+
+        return view;
     }
 
-    private View setUpView(final Context context) {
-
-         /*View view = LayoutInflater.from(context).inflate(R.layout.popupwindow, null);*/
-        floatWinCalendar = new FloatWinCalendar();
-
-        mFloatView = new FloatView(context);//(FloatView) view.findViewById(R.id.popup_window_btn);
-        mFloatView.setImageResource(R.mipmap.ic_launcher);
-        mFloatView.setOnClickListener(new View.OnClickListener() {
+    private void setTouchAction(View view) {
+        mCloseBtn = (ImageButton) view.findViewById(R.id.floatwin_calendar_btn_close);
+        mCloseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                floatWinCalendar.showFloatWinCalendar(mContext);
+                hideFloatWinCalendar();
             }
         });
 
-        return mFloatView;
+        mWindowView = view.findViewById(R.id.floatwin_calendar_layout);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Rect rect = new Rect();
+                mWindowView.getGlobalVisibleRect(rect);
 
+                int X = (int) event.getX();
+                int Y = (int) event.getY();
+
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (!isEffectiveArea(X, Y, rect)) {
+                            hideFloatWinCalendar();
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    private boolean isEffectiveArea(int x, int y, Rect rect) {
+        return rect.contains(x, y);
     }
 }
