@@ -51,6 +51,12 @@
                 android:resource="@xml/app_widget_info" />
         </receiver>
 
+        <receiver android:name=".FloatWindow.FloatWinReceiver">
+            <intent-filter>
+                <action android:name="com.rapid.jason.rapidnetwork.FloatWindow"/>
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".WidgetsWindow.WidgetService"
             android:enabled="true"

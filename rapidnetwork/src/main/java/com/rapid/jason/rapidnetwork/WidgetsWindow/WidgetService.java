@@ -42,8 +42,10 @@ public class WidgetService extends Service {
         String strPath = uri.getPath();
         strPath = strPath.replace("/", "");
         if ("floatwin".equals(strPath)) {
-            WindowUtils windowUtils = new WindowUtils();
-            windowUtils.showPopupWindow(this.getApplicationContext());
+            Intent intentBroadcast = new Intent();
+            intentBroadcast.setAction("com.rapid.jason.rapidnetwork.FloatWindow");
+            intentBroadcast.putExtra("floatwin", "show");
+            sendBroadcast(intentBroadcast);
         }
 
         return 1;

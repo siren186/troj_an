@@ -1,6 +1,9 @@
 package com.rapid.jason.rapidnetwork.FloatWindow;
 
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
 import android.view.View;
@@ -77,7 +80,9 @@ public class WindowUtils {
         mFloatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                floatWinCalendar.showFloatWinCalendar(mContext);
+//                Intent intent = new Intent();
+//                intent.setComponent(new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity"));
+//                mContext.startActivity(intent);
             }
         });
 
