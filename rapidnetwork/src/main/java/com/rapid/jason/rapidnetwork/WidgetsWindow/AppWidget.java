@@ -46,16 +46,25 @@ public class AppWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
         System.out.println("onReceive");
+
+        if (intent == null) {
+            return;
+        }
+
+        Uri uri = intent.getData();
+        if (uri != null) {
+            WindowUtils windowUtils = new WindowUtils();
+            windowUtils.showPopupWindow(context);
+        }
+
+        super.onReceive(context, intent);
     }
 
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
 
         // Create an Intent to launch ExampleActivity
 //        Intent intent = new Intent(context, MainActivity.class);
@@ -137,6 +146,10 @@ public class AppWidget extends AppWidgetProvider {
 //        WindowUtils.showPopupWindow(context.getApplicationContext());
 //
 //        views.setOnClickPendingIntent(R.id.btn_floatwin, pendingIntent);
+        Intent intent = new Intent(context, AppWidget.class);
+        intent.setData(Uri.parse("harvic:floatwin"));
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.btn_floatwin, pendingIntent);
     }
 }
 

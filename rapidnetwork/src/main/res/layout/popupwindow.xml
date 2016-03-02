@@ -5,16 +5,9 @@
 
     <RelativeLayout
         android:id="@+id/popup_window"
-<<<<<<< Updated upstream
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/Black">
-=======
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
->>>>>>> Stashed changes
 
         <com.rapid.jason.rapidnetwork.FloatWindow.FloatView
             android:id="@+id/popup_window_btn"

@@ -97,7 +97,7 @@ public class WindowUtils {
         floatWinCalendar = new FloatWinCalendar();
 
         mFloatView = new FloatView(context);//(FloatView) view.findViewById(R.id.popup_window_btn);
-        mFloatView.setImageResource(R.mipmap.ic_launcher);
+        mFloatView.setImageResource(R.drawable.floatwin);
         mFloatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
