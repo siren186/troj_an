@@ -5,12 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.UriMatcher;
+import android.net.Uri;
 import android.os.IBinder;
 
 import com.rapid.jason.rapidnetwork.FloatWindow.WindowUtils;
 
 public class WidgetService extends Service {
     private WidgetBroadcastReceiver widgetBroadcastReceiver = new WidgetBroadcastReceiver();
+
+    private UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     public WidgetService() {
     }
@@ -23,15 +27,26 @@ public class WidgetService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("to_service");
-        registerReceiver(widgetBroadcastReceiver, intentFilter);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        super.onStartCommand(intent, flags, startId);
+        System.out.println("WidgetService:onStartCommand");
+
+        Uri uri = intent.getData();
+        if (uri == null) {
+            return 0;
+        }
+
+        String strPath = uri.getPath();
+        strPath = strPath.replace("/", "");
+        if ("floatwin".equals(strPath)) {
+            WindowUtils windowUtils = new WindowUtils();
+            windowUtils.showPopupWindow(this.getApplicationContext());
+        }
+
+        return 1;
     }
 
     private class WidgetBroadcastReceiver extends BroadcastReceiver {

@@ -26,4 +26,5 @@ dependencies {
     compile files('../3rdparty/libs/volley.jar')
     compile 'io.reactivex:rxjava:1.0.9'
     compile 'io.reactivex:rxandroid:0.24.0'
+    compile 'com.prolificinteractive:material-calendarview:1.2.0'
 }

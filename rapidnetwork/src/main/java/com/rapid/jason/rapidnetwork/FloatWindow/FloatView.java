@@ -1,6 +1,7 @@
 package com.rapid.jason.rapidnetwork.FloatWindow;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -41,14 +42,14 @@ public class FloatView extends ImageView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int rawX = (int) event.getRawX();
-        int rawY = (int) event.getRawY()-25;
+        int rawY = (int) event.getRawY() - 25;
 
         Rect rect = new Rect();
         getGlobalVisibleRect(rect);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mTouchStartX = (int) event.getX() + 5;
+                mTouchStartX = (int) event.getX();
                 mTouchStartY = (int) event.getY() + 25;
 
                 mEventStartX = rawX;
@@ -58,10 +59,10 @@ public class FloatView extends ImageView {
                 updateView(rawX - mTouchStartX, rawY - mTouchStartY);
                 break;
             case MotionEvent.ACTION_UP:
-                System.out.println("rawX:" + rawX + ",mTouchStartX:" + mEventStartX);
-                System.out.println("rawY:" + rawY + ",mTouchStartY:" + mEventStartY);
-                if ((rawX - mEventStartX > 30 || rawX - mEventStartX < -30) ||
-                    (rawY - mEventStartY > 30 || rawY - mEventStartY < -30)) {
+                int moveDistanceX = rawX - mEventStartX;
+                int moveDistanceY = rawY - mEventStartY;
+                if ((moveDistanceX > 30 || moveDistanceX < -30) ||
+                    (moveDistanceY > 30 || moveDistanceY < -30)) {
                     mTouchStartX = mTouchStartY = 0;
                 } else {
                     mClickListener.onClick(this);

@@ -1,5 +1,6 @@
 package com.rapid.jason.rapidnetwork.WidgetsWindow;
 
+import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -25,8 +26,8 @@ public class AppWidget extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         System.out.println("onUpdate");
 
-        final int N = appWidgetIds.length;
-        for (int i = 0; i < N; i++) {
+        final int length = appWidgetIds.length;
+        for (int i = 0; i < length; i++) {
             updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
         }
     }
@@ -140,15 +141,9 @@ public class AppWidget extends AppWidgetProvider {
     }
 
     private void setFloatwin(Context context, RemoteViews views) {
-//        Intent intent =  new Intent();
-//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-//
-//        WindowUtils.showPopupWindow(context.getApplicationContext());
-//
-//        views.setOnClickPendingIntent(R.id.btn_floatwin, pendingIntent);
-        Intent intent = new Intent(context, AppWidget.class);
-        intent.setData(Uri.parse("harvic:floatwin"));
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.setData(Uri.parse("show://com.rapid.jason/floatwin"));
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.btn_floatwin, pendingIntent);
     }
 }

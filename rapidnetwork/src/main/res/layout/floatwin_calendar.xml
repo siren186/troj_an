@@ -28,10 +28,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <CalendarView
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/calendarView" />
+                android:id="@+id/calendarView"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                app:mcv_showOtherDates="all"
+                app:mcv_selectionColor="#00F"/>
 
         </LinearLayout>
     </LinearLayout>

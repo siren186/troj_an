@@ -2,14 +2,17 @@ package com.rapid.jason.rapidnetwork.FloatWindow;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CalendarView;
 import android.widget.ImageButton;
 
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.rapid.jason.rapidnetwork.R;
 
 public class FloatWinCalendar {
@@ -60,13 +63,15 @@ public class FloatWinCalendar {
         // 设置 FLAG_NOT_FOCUSABLE 悬浮窗口较小时，后面的应用图标由不可长按变为可长按
         // 不设置这个flag的话，home页的划屏会有问题
 
-        /*params.width = 300;*/
-        params.height = 900;
+        Point point = new Point();
+        mWindowManager.getDefaultDisplay().getSize(point);
+        int height = point.y / 4 * 3;
+        params.height = height;
 
         params.x = 0;
         params.y = 0;
 
-        params.gravity = Gravity.CENTER;
+        params.gravity = Gravity.BOTTOM;
 
         mWindowManager.addView(mView, params);
     }
@@ -95,6 +100,8 @@ public class FloatWinCalendar {
                 hideFloatWinCalendar();
             }
         });
+
+        MaterialCalendarView calendarView = (MaterialCalendarView) view.findViewById(R.id.calendarView);
 
         mWindowView = view.findViewById(R.id.floatwin_calendar_layout);
         view.setOnTouchListener(new View.OnTouchListener() {

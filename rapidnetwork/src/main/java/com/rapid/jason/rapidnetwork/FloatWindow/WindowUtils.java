@@ -2,16 +2,9 @@ package com.rapid.jason.rapidnetwork.FloatWindow;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.media.Image;
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.rapid.jason.rapidnetwork.R;
 
@@ -26,11 +19,7 @@ public class WindowUtils {
 
     private WindowManager.LayoutParams params = null;
 
-    private float mTouchStartX = 0;
-    private float mTouchStartY = 0;
-
     private FloatWinCalendar floatWinCalendar = null;
-    private View popupWindowView = null;
 
     private FloatView mFloatView = null;
 
@@ -76,19 +65,6 @@ public class WindowUtils {
         mFloatView.setFloatWin(params);
 
         mWindowManager.addView(mView, params);
-    }
-
-    public void hidePopupWindow() {
-        if (isShown && null != mView) {
-            mWindowManager.removeView(mView);
-            isShown = false;
-        }
-    }
-
-    public void updateView(int x, int y) {
-        params.x = x;
-        params.y = y;
-        mWindowManager.updateViewLayout(mView, params);
     }
 
     private View setUpView(final Context context) {
