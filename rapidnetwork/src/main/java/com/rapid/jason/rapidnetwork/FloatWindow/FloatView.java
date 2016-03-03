@@ -1,14 +1,26 @@
 package com.rapid.jason.rapidnetwork.FloatWindow;
 
 import android.content.Context;
-import android.graphics.Point;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-public class FloatView extends ImageView {
+import com.rapid.jason.rapidnetwork.CollectPreferencesManager;
+import com.rapid.jason.rapidnetwork.DownloadFile.DownloadEvent;
+import com.rapid.jason.rapidnetwork.R;
+
+import de.greenrobot.event.EventBus;
+
+public class FloatView extends LinearLayout {
 
     private int mTouchStartX = 0;
     private int mTouchStartY = 0;
@@ -19,7 +31,12 @@ public class FloatView extends ImageView {
     private WindowManager mWindowManager = null;
     private WindowManager.LayoutParams mWindowManagerParams = null;
 
+    private TextView mCollectNumberView = null;
+
     private OnClickListener mClickListener = null;
+
+    private int mViewWidth = 0;
+    private int mViewHeight = 0;
 
     public FloatView(Context context) {
         super(context);
@@ -33,6 +50,26 @@ public class FloatView extends ImageView {
 
     public void initFloatwin(Context context) {
         mWindowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        LayoutInflater.from(context).inflate(R.layout.floatwin_layout, this);
+        mCollectNumberView = (TextView) findViewById(R.id.floatwin_collect_number);
+
+        int size = CollectPreferencesManager.getInstance().getCollectionWebSize();
+        mCollectNumberView.setText("" + size);
+        mCollectNumberView.setTextColor(Color.WHITE);
+
+        View view = findViewById(R.id.floatwin_layout);
+        mViewWidth = view.getLayoutParams().width;
+        mViewHeight = view.getLayoutParams().height;
+
+        EventBus.getDefault().register(this);
+    }
+
+    public int getViewWidthEx() {
+        return mViewWidth;
+    }
+
+    public int getViewHeightEx() {
+        return mViewHeight;
     }
 
     public void setFloatWin(WindowManager.LayoutParams params) {
@@ -81,8 +118,20 @@ public class FloatView extends ImageView {
         mWindowManager.updateViewLayout(this, mWindowManagerParams);
     }
 
+    public void updateView() {
+        int size = CollectPreferencesManager.getInstance().getCollectionWebSize();
+        mCollectNumberView.setText("" + size);
+    }
+
     @Override
     public void setOnClickListener(OnClickListener listener) {
         this.mClickListener = listener;
+    }
+
+    public void onEvent(DownloadEvent event) {
+        String msg = event.getMsg();
+        if (msg.equals("flash")) {
+            updateView();
+        }
     }
 }

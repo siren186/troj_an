@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/floatwin_webpage_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/White">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/Black"
+            android:orientation="horizontal"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp">
+            
+            <TextView
+                android:id="@+id/floatwin_webpage_text_url"
+                android:layout_width="200dp"
+                android:layout_height="23.76dp"
+                android:textColor="@color/White"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true">
+                浏览网页
+            </TextView>
+
+            <ImageButton
+                android:gravity="end"
+                android:id="@+id/floatwin_webpage_btn_collect"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf ="@+id/floatwin_webpage_btn_close"
+                android:background="@drawable/webpage_collect"/>
+
+            <ImageButton
+                android:gravity="end"
+                android:id="@+id/floatwin_webpage_btn_close"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@android:drawable/ic_menu_close_clear_cancel"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/floatwin_webpage_webView"
+                android:paddingBottom="5dp"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
