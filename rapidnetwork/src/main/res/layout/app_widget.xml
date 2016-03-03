@@ -1,0 +1,102 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/appwidget_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:background="#09C"
+        android:contentDescription="@string/appwidget_text"
+        android:text="@string/appwidget_text"
+        android:textColor="#ffffff"
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="@string/timebtn"
+            android:id="@+id/btn_time"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_weight="1"
+            android:background="@drawable/widget_clock"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/networkbtn"
+            android:id="@+id/btn_network"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/btn_time"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="打开CMS信息"
+            android:id="@+id/button6"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/btn_network"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="打开SJZS信息"
+            android:id="@+id/button7"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/button6"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/btn_calendar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="@string/calendarbtn"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/btn_network"
+            android:layout_weight="1"
+            android:background="@drawable/widget_calendar"/>
+
+        <ImageButton
+            android:id="@+id/btn_fastcall"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/widget_pig"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/btn_calendar" />
+
+        <ImageButton
+            android:id="@+id/btn_collection"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/widget_star"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/btn_fastcall" />
+
+        <ImageButton
+            android:id="@+id/btn_floatwin"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:background="@drawable/floatwin"
+            android:layout_below="@+id/btn_time"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+</RelativeLayout>

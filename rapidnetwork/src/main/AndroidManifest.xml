@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rapid.jason.rapidnetwork" >
+    package="com.rapid.jason.rapidnetwork">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,16 +27,40 @@
         </activity>
         <activity
             android:name=".NetworkIcon.ApkIconActivity"
-            android:label="@string/title_activity_apk_icon" >
-        </activity>
+            android:label="@string/title_activity_apk_icon"></activity>
         <activity
             android:name=".TraversalFile.TraversalFileActivity"
-            android:label="@string/title_activity_traversal_file" >
-        </activity>
+            android:label="@string/title_activity_traversal_file"></activity>
         <activity
             android:name=".DownloadFile.DownloadActivity"
-            android:label="@string/title_activity_download" >
-        </activity>
+            android:label="@string/title_activity_download"></activity>
+        <activity
+            android:name=".ListWordCard.ListWordActivity"
+            android:label="@string/title_activity_list_word"></activity>
+        <activity
+            android:name=".FloatWindow.FloatWinActivity"
+            android:label="@string/title_activity_float_win"></activity>
+
+        <receiver android:name=".WidgetsWindow.AppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info" />
+        </receiver>
+
+        <receiver android:name=".FloatWindow.FloatWinReceiver">
+            <intent-filter>
+                <action android:name="com.rapid.jason.rapidnetwork.FloatWindow"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".WidgetsWindow.WidgetService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

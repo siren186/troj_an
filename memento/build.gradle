@@ -5,8 +5,8 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.rapid.jason.rapidnetwork"
-        minSdkVersion 19
+        applicationId "com.jason.memento"
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -22,9 +22,4 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.0.0'
-    compile files('../3rdparty/libs/eventbus-2.4.1.jar')
-    compile files('../3rdparty/libs/volley.jar')
-    compile 'io.reactivex:rxjava:1.0.9'
-    compile 'io.reactivex:rxandroid:0.24.0'
-    compile 'com.prolificinteractive:material-calendarview:1.2.0'
 }

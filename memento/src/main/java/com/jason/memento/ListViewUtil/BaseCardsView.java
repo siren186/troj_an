@@ -1,14 +1,16 @@
-package com.rapid.jason.rapidnetwork.ListViewUtil;
+package com.jason.memento.ListViewUtil;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ *
+ */
 public abstract class BaseCardsView {
 
     private Context mAttachContext;
