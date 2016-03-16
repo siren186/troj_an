@@ -39,7 +39,7 @@ public class RequestQueue {
     }
 
     public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, int threadPoolSize) {
-        this(basicDownload, prepareDownload, DEFAULT_DOWNLOAD_THREAD_POOL_SIZE, new ExecutorDelivery(new Handler(Looper.getMainLooper())));
+        this(basicDownload, prepareDownload, threadPoolSize, new ExecutorDelivery(new Handler(Looper.getMainLooper())));
     }
 
     public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, int threadPoolSize, ResponseDelivery delivery) {

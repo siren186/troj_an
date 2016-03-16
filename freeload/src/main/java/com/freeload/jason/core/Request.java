@@ -20,7 +20,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     private final int mId;
 
     /** download start position. */
-    private int mDownloadStart;
+    private int mDownloadStart = 0;
 
     /** URL of this request. */
     private final String mUrl;
@@ -36,6 +36,12 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
     /** download file parent folder. */
     private final String mFileFolder;
+
+    /** download file thread setting*/
+    private int mThreadType = DownloadThreadType.NORMAL;
+
+    /** download file thread position*/
+    private int mThreadPosition = -1;
 
     private final static String fileSaveDir = Environment.getExternalStorageDirectory() + "/freeload/downloadfile";
 
@@ -68,7 +74,27 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         } else {
             downloadFileName = fileName;
         }
+
+        if (mThreadPosition > -1) {
+            downloadFileName += ("tmp" + mThreadPosition);
+        }
         return downloadFileName;
+    }
+
+    protected void setThreadPosition(int position) {
+        this.mThreadPosition = position;
+    }
+
+    public int getThreadPosition() {
+        return this.mThreadPosition;
+    }
+
+    protected void setThreadType(int type) {
+        this.mThreadType = type;
+    }
+
+    protected int getThreadType() {
+        return this.mThreadType;
     }
 
     public enum Priority {
@@ -90,7 +116,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /**
      * Mark this request as canceled.  No callback will be delivered.
      */
-    public void cancel() {
+    protected void cancel() {
         mCanceled = true;
     }
 
@@ -127,7 +153,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * be non-null; responses that fail to parse are not delivered.
      * @param response
      */
-    protected abstract void deliverResponse(T response);
+    //protected abstract void deliverResponse(T response);
 
     /**
      * Returns the URL of this request.
@@ -218,5 +244,5 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     }
 
     /** Delivers when download request progress change to the Listener. */
-    public abstract void deliverDownloadProgress(long fileSize, long downloadedSize);
+    public abstract void deliverDownloadProgress(long fileSize, long downloadedSize, T response);
 }

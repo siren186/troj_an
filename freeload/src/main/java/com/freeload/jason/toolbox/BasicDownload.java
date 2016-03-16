@@ -28,7 +28,7 @@ public class BasicDownload implements Network {
         HttpURLConnection http = null;
         try {
             URL downloadUrl = new URL(request.getUrl());
-            postResponse(delivery, request, "start");
+            postResponse(request, "start", delivery);
 
             //使用Get方式下载
 
@@ -40,18 +40,19 @@ public class BasicDownload implements Network {
             http.setRequestProperty("Referer", downloadUrl.toString());
             http.setRequestProperty("Charset", "UTF-8");
 
-            int startPos = request.getDownloadStart();//开始位置
+            int startPos = request.getDownloadStart();
             long endPos = request.getDownloadFileSize();
+
             http.setRequestProperty("Range", "bytes=" + startPos + "-"+ endPos);//设置获取实体数据的范围
             http.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)");
             http.setRequestProperty("Connection", "Keep-Alive");
 
             int exception = http.getResponseCode();
             switch (exception) {
-                case 200 : transferData(request, delivery, downloadLength, http);
-                    return;
-                case 206 : transferData(request, delivery, downloadLength, http);
-                    return;
+                case 200 :
+                case 206 :
+                    transferData(request, delivery, downloadLength, http);
+                    break;
                 case 301:
                 case 302:
                 case 303:
@@ -73,18 +74,22 @@ public class BasicDownload implements Network {
     }
 
     private void transferData(Request<?> request, ResponseDelivery delivery, long downloadLength, HttpURLConnection http) throws IOException {
-        InputStream inStream = http.getInputStream();
+        InputStream inStream = null;
         byte[] buffer = new byte[1024];
+
         int offset = 0;
         int startPos = request.getDownloadStart();
         long endPos = request.getDownloadFileSize();
+
         RandomAccessFile threadfile = new RandomAccessFile(request.getSaveFile(), "rwd");
         threadfile.seek(startPos);
+
+        inStream = http.getInputStream();
 
         while (true) {
             offset = inStream.read(buffer, 0, 1024);
             if (offset == -1) {
-                postResponse(delivery, request, "finish");
+                postResponse(request, "finish", delivery);
                 break;
             }
 
@@ -92,7 +97,7 @@ public class BasicDownload implements Network {
             downloadLength += offset;
 
             if (request.isCanceled()) {
-                postResponse(delivery, request, "cancel");
+                postResponse(request, "cancel", delivery);
                 break;
             }
 
@@ -103,17 +108,17 @@ public class BasicDownload implements Network {
         inStream.close();
     }
 
+    private void postResponse(Request<?> request, String state, ResponseDelivery delivery) {
+        if (delivery == null) {
+            return;
+        }
+        delivery.postDownloadProgress(request, Response.success("position" + request.getThreadPosition() + ":" + state), 0, 0);
+    }
+
     private void postProgress(Request<?> request, ResponseDelivery delivery, long downLoadFileSize, long downloadLength) {
         if (delivery == null) {
             return;
         }
-        delivery.postDownloadProgress(request, downLoadFileSize, downloadLength);
-    }
-
-    private void postResponse(ResponseDelivery delivery, Request<?> request, String state) {
-        if (delivery == null) {
-            return;
-        }
-        delivery.postResponse(request, Response.success(state));
+        delivery.postDownloadProgress(request, Response.success("position" + request.getThreadPosition() + ":" + ""), downLoadFileSize, downloadLength);
     }
 }

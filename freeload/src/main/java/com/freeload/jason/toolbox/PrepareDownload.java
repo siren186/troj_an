@@ -40,7 +40,7 @@ public class PrepareDownload implements Prepare {
         if (delivery == null) {
             return;
         }
-        delivery.postResponse(request, Response.success(state));
+        delivery.postResponse(request, Response.success("position" + request.getThreadPosition() + ":" + state));
     }
 
     private File createFile(Request<?> request) {
