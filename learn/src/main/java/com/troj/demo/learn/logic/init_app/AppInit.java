@@ -2,7 +2,7 @@ package com.troj.demo.learn.logic.init_app;
 
 import android.content.Context;
 
-import com.troj.demo.furansujin.ChannelUtils;
+import com.monet.furansujin.ChannelUtils;
 import com.xsj.crasheye.Crasheye;
 
 public class AppInit {
