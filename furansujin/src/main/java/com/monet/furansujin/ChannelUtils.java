@@ -16,7 +16,7 @@ public class ChannelUtils {
     private static String mChannel = null;
     private static final String mDefaultChannel = "0";
     private static final String mMark = "_";
-    private static final String mKeyOfChannelFileName = "07C14759-1E80-4f5f-8C84-FCF7BDDB6CA3" + mMark;
+    private static final String mKeyOfChannelFileName = "07c147591e804f5f" + mMark;
 
     public synchronized static String getChannel(String apkPath) {
         if (TextUtils.isEmpty(mChannel)) {
