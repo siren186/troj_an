@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">learn</string>
     <string name="web_browser_label">&#160;&#160;&#160;learn-browser</string>
+
+    <string name="press_once_more_to_exit">再按一次退出程序</string>
 </resources>

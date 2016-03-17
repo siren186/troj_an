@@ -35,7 +35,7 @@ public class HomeActivity extends Activity {
     @Override
     public void onBackPressed() {
         if((System.currentTimeMillis() - mBackKeyPressedTime) > 2000){
-            Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.press_once_more_to_exit, Toast.LENGTH_SHORT).show();
             mBackKeyPressedTime = System.currentTimeMillis();
         } else {
             super.onBackPressed();
