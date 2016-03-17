@@ -1,7 +1,5 @@
 package com.monet.furansujin;
 
-import android.content.Context;
-
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -17,36 +15,36 @@ public class ChannelUtils {
 
     private static String mChannel = null;
     private static final String mDefaultChannel = "0";
-    private static final String mKeyOfChannelFileName = "channel_";
+    private static final String mMark = "_";
+    private static final String mKeyOfChannelFileName = "07C14759-1E80-4f5f-8C84-FCF7BDDB6CA3" + mMark;
 
-    public synchronized static String getChannel(Context ctx) {
-        if (null == mChannel) {
-            mChannel = getChannelImpl(ctx);
+    public synchronized static String getChannel(String apkPath) {
+        if (TextUtils.isEmpty(mChannel)) {
+            mChannel = getChannelImpl(apkPath);
         }
         return mChannel;
     }
 
-    private static String getChannelImpl(Context ctx) {
-        String fileName = getChannelFileName(ctx);
+    private static String getChannelImpl(String apkPath) {
+        String fileName = getChannelFileName(apkPath);
         String channel = parseFileName2Channel(fileName);
 
-        if (null == channel) {
+        if (TextUtils.isEmpty(channel)) {
             channel = mDefaultChannel;
         }
 
         return channel;
     }
 
-    private static String getChannelFileName(Context ctx) {
-        if (null == ctx) {
+    private static String getChannelFileName(String apkPath) {
+        if (TextUtils.isEmpty(apkPath)) {
             return null;
         }
 
-        String sourceDir = ctx.getApplicationInfo().sourceDir;
         String fileName = null;
         ZipFile zipfile = null;
         try {
-            zipfile = new ZipFile(sourceDir);
+            zipfile = new ZipFile(apkPath);
             Enumeration<?> entries = zipfile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = ((ZipEntry) entries.nextElement());
@@ -72,13 +70,13 @@ public class ChannelUtils {
     }
 
     private static String parseFileName2Channel(String fileName) {
-        String tryno = null;
-        if (null != fileName) {
-            String[] split = fileName.split("_");
-            if (split != null && split.length >= 2) {
-                tryno = fileName.substring(split[0].length() + 1);
+        String channel = null;
+        if (!TextUtils.isEmpty(fileName)) {
+            String[] split = fileName.split(mMark);
+            if (split.length >= 2) {
+                channel = fileName.substring(split[0].length() + 1);
             }
         }
-        return tryno;
+        return channel;
     }
 }

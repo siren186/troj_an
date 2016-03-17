@@ -20,6 +20,8 @@ public class AppInit {
     private void initCrasheye(Context context) {
         Crasheye.init(context, "eaa37bd0");
         Crasheye.setFlushOnlyOverWiFi(true);
-        Crasheye.setChannelID(ChannelUtils.getChannel(context));
+
+        String channelID = ChannelUtils.getChannel(context.getApplicationInfo().sourceDir);
+        Crasheye.setChannelID(channelID);
     }
 }
