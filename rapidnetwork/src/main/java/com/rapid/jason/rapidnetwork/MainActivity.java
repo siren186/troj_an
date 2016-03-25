@@ -1,6 +1,7 @@
 package com.rapid.jason.rapidnetwork;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import com.rapid.jason.rapidnetwork.DownloadFile.DownloadActivity;
 import com.rapid.jason.rapidnetwork.FloatWindow.FloatWinActivity;
 import com.rapid.jason.rapidnetwork.ListWordCard.ListWordActivity;
 import com.rapid.jason.rapidnetwork.NetworkIcon.ApkIconActivity;
+import com.rapid.jason.rapidnetwork.ProgressBar.ProgressBarActivity;
 import com.rapid.jason.rapidnetwork.TraversalFile.TraversalFileActivity;
 
 public class MainActivity extends ActionBarActivity {
@@ -29,6 +31,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        Intent intent = new Intent(MainActivity.this, ProgressBarActivity.class);
+//        startActivity(intent);
 
         btnVolleyNetIcon = (Button) findViewById(R.id.volley_neticon_btn);
         btnVolleyNetIcon.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +61,6 @@ public class MainActivity extends ActionBarActivity {
 //                startActivity (intent);
 //            }
 //        });
-
         btnVolleyFreeload = (Button) findViewById(R.id.volley_free_load_btn);
         btnVolleyFreeload.setOnClickListener(new View.OnClickListener() {
             @Override

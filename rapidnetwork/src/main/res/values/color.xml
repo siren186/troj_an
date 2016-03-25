@@ -5,4 +5,10 @@
     <color name="Gray">#6c6c6c</color>
     <color name="Orange">#e63900</color>
     <color name="LightGray">#f3f3f3</color>
+    <color name="apk_scan_path_bg">#28000000</color>
+    <color name="apk_scan_head_bg">#277ee5</color>
+    <color name="apk_progressbar_flash_start">#ff15a9ff</color>
+    <color name="apk_progressbar_flash_center">#ff15f0ff</color>
+    <color name="apk_progressbar_flash_end">#ff15a9ff</color>
+    <color name="apk_progressbar_flash_bg">#cecece</color>
 </resources>

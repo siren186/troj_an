@@ -16,4 +16,5 @@
     <string name="networkbtn">打开网络</string>
 
     <string name="web_browser_label">&#160;&#160;&#160;Gravity</string>
+    <string name="title_activity_process_bar">ProcessBarActivity</string>
 </resources>

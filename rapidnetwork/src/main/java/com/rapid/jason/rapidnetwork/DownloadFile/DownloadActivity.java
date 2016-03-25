@@ -16,7 +16,14 @@ import com.freeload.jason.toolbox.DownloadRequest;
 import com.freeload.jason.toolbox.Freeload;
 import com.rapid.jason.rapidnetwork.R;
 
+import java.util.ArrayList;
+
 import de.greenrobot.event.EventBus;
+import rx.*;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class DownloadActivity extends Activity {
 
@@ -66,30 +73,81 @@ public class DownloadActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                request = new DownloadRequest(1, Url, mDownloadSize, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        EventBus.getDefault().post(new DownloadEvent(response));
-                        return;
-                    }
+                request = DownloadRequest.create(1, Url, mDownloadSize)
+                    .setListener(new Response.Listener<String>() {
+                        @Override
+                        public void onProgressChange(long l, long l1, String s) {
+                            EventBus.getDefault().post(new DownloadEvent(s));
 
-                    @Override
-                    public void onProgressChange(long fileSize, long downloadedSize) {
-                        text.setText("" + fileSize);
-                        text1.setText("" + downloadedSize);
+                            text.setText("" + l);
+                            text1.setText("" + l1);
 
-//                        ContentValues values = new ContentValues();
-//                        values.put("downloadstart", downloadedSize);
-//                        dbManager.updateById(DownloadFileDb.class, values, 1);
-
-                        mDownloadSize = (int) downloadedSize;
-
-                        return;
-                    }
-                });
-                requestQueue.add(request);
+                            mDownloadSize = (int) l1;
+                        }
+                    })
+                    .addRequestQueue(requestQueue);
             }
         });
+
+//        Observable.create(new Observable.OnSubscribe<ArrayList<String>>() {
+//                    @Override
+//                    public void call(Subscriber<? super ArrayList<String>> subscriber) {
+//                        System.out.println("create call");
+//                        ArrayList<String> T = new ArrayList<String>();
+//                        T.add("hello");
+//                        T.add("shit");
+//                        T.add("fuck");
+//                        T.add("");
+//                        T.add("ppp");
+//                        subscriber.onNext(T);
+//                        subscriber.onCompleted();
+//                    }
+//                })
+//                .doOnNext(new Action1<ArrayList<String>>() {
+//                    @Override
+//                    public void call(ArrayList<String> strings) {
+//                        System.out.println("doOnNext 1 call");
+//                    }
+//                })
+//                .subscribeOn(Schedulers.newThread())
+//                .doOnNext(new Action1<ArrayList<String>>() {
+//                    @Override
+//                    public void call(ArrayList<String> strings) {
+//                        System.out.println("doOnNext 2 call");
+//                        try {
+//                            Thread.sleep(10000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .flatMap(new Func1<ArrayList<String>, Observable<String>>() {
+//                    @Override
+//                    public Observable<String> call(ArrayList<String> strings) {
+//                        return Observable.from(strings);
+//                    }
+//                })
+//                .map(new Func1<String, String>() {
+//                    @Override
+//                    public String call(String s) {
+//                        return null;
+//                    }
+//                })
+//                .filter(new Func1<String, Boolean>() {
+//                    @Override
+//                    public Boolean call(String s) {
+//                        return !"".equals(s);
+//                    }
+//                })
+//                .take(2)
+//                .subscribe(new Action1<String>() {
+//                    @Override
+//                    public void call(String s) {
+//                        System.out.println("subscribe call");
+//                        System.out.println(s);
+//                    }
+//                });
     }
 
     @Override

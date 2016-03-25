@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rapid.jason.rapidnetwork">
+    package="com.rapid.jason.rapidnetwork" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
@@ -16,10 +16,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,21 +28,21 @@
         </activity>
         <activity
             android:name=".NetworkIcon.ApkIconActivity"
-            android:label="@string/title_activity_apk_icon"></activity>
+            android:label="@string/title_activity_apk_icon" />
         <activity
             android:name=".TraversalFile.TraversalFileActivity"
-            android:label="@string/title_activity_traversal_file"></activity>
+            android:label="@string/title_activity_traversal_file" />
         <activity
             android:name=".DownloadFile.DownloadActivity"
-            android:label="@string/title_activity_download"></activity>
+            android:label="@string/title_activity_download" />
         <activity
             android:name=".ListWordCard.ListWordActivity"
-            android:label="@string/title_activity_list_word"></activity>
+            android:label="@string/title_activity_list_word" />
         <activity
             android:name=".FloatWindow.FloatWinActivity"
-            android:label="@string/title_activity_float_win"></activity>
+            android:label="@string/title_activity_float_win" />
 
-        <receiver android:name=".WidgetsWindow.AppWidget">
+        <receiver android:name=".WidgetsWindow.AppWidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -51,30 +51,32 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_info" />
         </receiver>
-
-        <receiver android:name=".FloatWindow.FloatWinReceiver">
+        <receiver android:name=".FloatWindow.FloatWinReceiver" >
             <intent-filter>
-                <action android:name="com.rapid.jason.rapidnetwork.FloatWindow"/>
+                <action android:name="com.rapid.jason.rapidnetwork.FloatWindow" />
             </intent-filter>
         </receiver>
 
         <service
             android:name=".WidgetsWindow.WidgetService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true" >
         </service>
 
         <activity
             android:name=".FloatWindow.WebBrowserActivity"
             android:label="@string/web_browser_label"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <!--data android:host="*" />
+                <!--
+                data android:host="*" />
                 <data android:pathPattern=".*\\.apk" />
                 <data android:pathPattern=".*\\.jpg" />
                 <data android:pathPattern=".*\\.jpeg" />
@@ -83,15 +85,21 @@
                 <data android:pathPattern=".*\\.doc" />
                 <data android:pathPattern=".*\\.txt" />
                 <data android:pathPattern=".*\\.mp3" />
-                <data android:pathPattern=".*\\.zip" /-->
+                <data android:pathPattern=".*\\.zip" /
+                -->
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-                <data android:mimeType="image/*"/>
-                <data android:mimeType="text/*"/>
+
+                <data android:mimeType="image/*" />
+                <data android:mimeType="text/*" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ProgressBar.ProgressBarActivity"
+            android:label="@string/title_activity_process_bar" >
         </activity>
     </application>
 

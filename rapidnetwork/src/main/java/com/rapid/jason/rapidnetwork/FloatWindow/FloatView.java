@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -27,6 +28,9 @@ public class FloatView extends LinearLayout {
 
     private int mEventStartX = 0;
     private int mEventStartY = 0;
+
+    private int mLastEndX = 0;
+    private int mLastEndY = 0;
 
     private WindowManager mWindowManager = null;
     private WindowManager.LayoutParams mWindowManagerParams = null;
@@ -103,6 +107,13 @@ public class FloatView extends LinearLayout {
                     mTouchStartX = mTouchStartY = 0;
                 } else {
                     mClickListener.onClick(this);
+
+                    Point point = new Point();
+                    mWindowManager.getDefaultDisplay().getSize(point);
+
+                    updateView(point.x - 50 - mTouchStartX, (point.y / 4) - 50 - 25 - mTouchStartY);
+                    mLastEndX = point.x - 50 - mTouchStartX;
+                    mLastEndY = point.y - 50 - 25 - mTouchStartY;
                 }
                 break;
             default:
@@ -121,6 +132,8 @@ public class FloatView extends LinearLayout {
     public void updateView() {
         int size = CollectPreferencesManager.getInstance().getCollectionWebSize();
         mCollectNumberView.setText("" + size);
+
+        updateView(mTouchStartX - mLastEndX, mTouchStartY - mLastEndY);
     }
 
     @Override

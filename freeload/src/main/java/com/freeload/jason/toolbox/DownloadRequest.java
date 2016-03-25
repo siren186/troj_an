@@ -34,6 +34,8 @@ public class DownloadRequest extends Request<String> {
 
     protected DownloadRequest(int id, String Url, int downloadStart, String fileName, String fileFolder, int downloadLength) {
         super(id, Url, downloadStart, fileName, fileFolder, downloadLength);
+
+        mDownloadRequestList = new ArrayList<DownloadRequest>();
     }
 
     public DownloadRequest setListener(Response.Listener<String> listener) {
