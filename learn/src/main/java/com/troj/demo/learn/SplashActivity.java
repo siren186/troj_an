@@ -1,14 +1,14 @@
 package com.troj.demo.learn;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.troj.demo.learn.logic.init_app.AppInit;
 import com.troj.demo.learn.ui.main.HomeActivity;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
 
     private static final long SHOW_TIME = 1000;
     private AsyncTask<Void, Void, Integer> mInitTask = null;

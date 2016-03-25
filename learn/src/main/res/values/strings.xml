@@ -3,4 +3,8 @@
     <string name="web_browser_label">&#160;&#160;&#160;learn-browser</string>
 
     <string name="press_once_more_to_exit">再按一次退出程序</string>
+    <string name="first_bottom_tab_title">首页</string>
+    <string name="second_bottom_tab_title">首页2</string>
+    <string name="third_bottom_tab_title">首页3</string>
+    <string name="fourth_bottom_tab_title">更多</string>
 </resources>
