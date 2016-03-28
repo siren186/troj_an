@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.troj.demo.learn.R;
@@ -39,6 +40,7 @@ public class MainFragment0RecyclerViewAdapter extends RecyclerView.Adapter<MainF
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.mTv1.setText(mDataList.get(position));
+        holder.mImg1.setImageResource(R.mipmap.ic_launcher);
     }
 
     @Override
@@ -50,13 +52,12 @@ public class MainFragment0RecyclerViewAdapter extends RecyclerView.Adapter<MainF
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.main_fragment_list_item_layout_tv1)
-        TextView mTv1;
+        @Bind(R.id.main_fragment_list_item_layout_img1) ImageView mImg1;
+        @Bind(R.id.main_fragment_list_item_layout_tv1) TextView mTv1;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            mTv1.setText("666");
         }
     }
 }

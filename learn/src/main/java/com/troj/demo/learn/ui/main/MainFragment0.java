@@ -48,10 +48,9 @@ public class MainFragment0 extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         MainFragment0RecyclerViewAdapter adapter = new MainFragment0RecyclerViewAdapter(this.getActivity());
         mDataList = new ArrayList<>();
-        mDataList.add("hello");
-        mDataList.add("world");
-        mDataList.add("nihao");
-        mDataList.add("shijie");
+        for (int i=0; i<50; ++i) {
+            mDataList.add(String.valueOf(i));
+        }
         adapter.setDataList(mDataList);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addItemDecoration(new RecycleViewDivider(this.getActivity(), LinearLayoutManager.VERTICAL));
