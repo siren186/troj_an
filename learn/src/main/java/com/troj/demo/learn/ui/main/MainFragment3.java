@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.troj.demo.learn.R;
-import com.troj.demo.learn.ui.main.utils.MainFragmentUtils;
+import com.troj.demo.learn.ui.main.utils.FragmentHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainFragment3 extends Fragment {
-    MainFragmentUtils.FragmentHolder mFragmentHolder = new MainFragmentUtils.FragmentHolder();
+    FragmentHolder mFragmentHolder = new FragmentHolder();
 
     @Bind(R.id.fragment_main_3_tv) TextView mTextView;
 

@@ -40,7 +40,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:22.+'
+    compile 'com.android.support:recyclerview-v7:22.+'
+    compile 'com.android.support:cardview-v7:22.+'
     compile files('../3rdparty/libs/butterknife-7.0.1.jar')
     compile files('../3rdparty/libs/crasheye_2.1.5.jar')
     compile project(':furansujin')

@@ -9,7 +9,8 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.troj.demo.learn.R;
-import com.troj.demo.learn.ui.main.utils.HomeActivityUtils;
+import com.troj.demo.learn.ui.main.utils.FragmentInfo;
+import com.troj.demo.learn.ui.main.utils.ExitAppUtils;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -39,30 +40,30 @@ public class HomeActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if (!HomeActivityUtils.handleExitApp(getApplicationContext())) {
+        if (!ExitAppUtils.handleExitApp(getApplicationContext())) {
             super.onBackPressed();
             finish();
         }
     }
 
     private void initView() {
-        HomeActivityUtils.FragmentInfo[] fragmentInfos = new HomeActivityUtils.FragmentInfo[] {
-                new HomeActivityUtils.FragmentInfo(MainFragment0.class, mBottomTabItemTitle0, mBottomTabItemIcon0),
-                new HomeActivityUtils.FragmentInfo(MainFragment1.class, mBottomTabItemTitle1, mBottomTabItemIcon1),
-                new HomeActivityUtils.FragmentInfo(MainFragment2.class, mBottomTabItemTitle2, mBottomTabItemIcon2),
-                new HomeActivityUtils.FragmentInfo(MainFragment3.class, mBottomTabItemTitle3, mBottomTabItemIcon3)
+        FragmentInfo[] fragmentInfos = new FragmentInfo[] {
+                new FragmentInfo(MainFragment0.class, mBottomTabItemTitle0, mBottomTabItemIcon0),
+                new FragmentInfo(MainFragment1.class, mBottomTabItemTitle1, mBottomTabItemIcon1),
+                new FragmentInfo(MainFragment2.class, mBottomTabItemTitle2, mBottomTabItemIcon2),
+                new FragmentInfo(MainFragment3.class, mBottomTabItemTitle3, mBottomTabItemIcon3)
         };
 
         mFragmentTabHost.setup(this, getSupportFragmentManager(), R.id.activity_home_main_content);
         mFragmentTabHost.getTabWidget().setDividerDrawable(null); // 去掉分割线
 
-        for (HomeActivityUtils.FragmentInfo info : fragmentInfos) {
+        for (FragmentInfo info : fragmentInfos) {
             TabHost.TabSpec tabSpec = mFragmentTabHost.newTabSpec(info.getTitle()).setIndicator(getViewOfBottomTabItem(info));
             mFragmentTabHost.addTab(tabSpec, info.getFragmentClass(), null);
         }
     }
 
-    private View getViewOfBottomTabItem(HomeActivityUtils.FragmentInfo info) {
+    private View getViewOfBottomTabItem(FragmentInfo info) {
         View view = View.inflate(getApplicationContext(), R.layout.bottom_tab_item_layout, null);
         TextView tv = (TextView) view.findViewById(R.id.bottom_tab_item_layout_tv);
         tv.setText(info.getTitle());

@@ -3,22 +3,29 @@ package com.troj.demo.learn.ui.main;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.troj.demo.learn.R;
-import com.troj.demo.learn.ui.main.utils.MainFragmentUtils;
+import com.troj.demo.learn.ui.main.utils.FragmentHolder;
+import com.troj.demo.learn.ui.main.utils.MainFragment0RecyclerViewAdapter;
+import com.troj.demo.learn.ui.utils.RecycleViewDivider;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
 public class MainFragment0 extends Fragment {
-    MainFragmentUtils.FragmentHolder fragmentHolder = new MainFragmentUtils.FragmentHolder();
+    FragmentHolder fragmentHolder = new FragmentHolder();
+    ArrayList<String> mDataList;
 
-    @Bind(R.id.fragment_main_0_tv) TextView mTextView;
+    @Bind(R.id.fragment_main_0_recycler_view)
+    RecyclerView mRecyclerView;
 
     @Nullable
     @Override
@@ -38,6 +45,15 @@ public class MainFragment0 extends Fragment {
     }
 
     private void initView() {
-        mTextView.setText(R.string.first_bottom_tab_title);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        MainFragment0RecyclerViewAdapter adapter = new MainFragment0RecyclerViewAdapter(this.getActivity());
+        mDataList = new ArrayList<>();
+        mDataList.add("hello");
+        mDataList.add("world");
+        mDataList.add("nihao");
+        mDataList.add("shijie");
+        adapter.setDataList(mDataList);
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(this.getActivity(), LinearLayoutManager.VERTICAL));
     }
 }
