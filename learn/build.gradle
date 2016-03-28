@@ -11,15 +11,28 @@ android {
         versionCode 10001
         versionName "1.0.1"
     }
+
+    signingConfigs {
+        release {
+            File strFile = new File("../signing_configs/learn.jks")
+            storeFile file(strFile)
+            storePassword "monet186"
+            keyPassword "monet186"
+            keyAlias "monet"
+            println strFile.absolutePath;
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            output.outputFile = new File(output.outputFile.parent, defaultConfig.applicationId + "-" + buildType.name + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk" );
+            output.outputFile = new File(output.outputFile.parent, defaultConfig.applicationId + "-" + buildType.name + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk");
         }
     }
 }
