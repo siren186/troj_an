@@ -3,42 +3,57 @@ package com.freeload.jason.toolbox;
 import com.freeload.jason.core.Request;
 import com.freeload.jason.core.Response;
 
-public class DownloadRequest extends Request<String>{
+public class DownloadRequest extends Request<DownloadReceipt> {
 
-    private final Response.Listener<String> listener;
+    private Response.Listener<DownloadReceipt> mListener;
 
-    public DownloadRequest(int id, String Url, Response.Listener<String> listener) {
-        this(id, Url, 0, listener);
+    public static DownloadRequest create(int id, String Url) {
+        return create(id, Url, null);
     }
 
-    public DownloadRequest(int id, String Url, int downloadStart, Response.Listener<String> listener) {
-        this(id, Url, downloadStart, null, listener);
+    public static DownloadRequest create(int id, String Url, String fileFolder) {
+        return new DownloadRequest(id, Url, fileFolder);
     }
 
-    public DownloadRequest(int id, String Url, int downloadStart, String fileName, Response.Listener<String> listener) {
-        this(id, Url, downloadStart, fileName, null, listener);
+    protected DownloadRequest(int id, String Url, String fileFolder) {
+        super(id, Url, fileFolder);
     }
 
-    public DownloadRequest(int id, String Url, int downloadStart, String fileName, String fileFolder, Response.Listener<String> listener) {
-        this(id, Url, downloadStart, fileName, fileFolder, 0, listener);
-    }
-
-    public DownloadRequest(int id, String Url, int downloadStart, String fileName, String fileFolder, int downloadLength, Response.Listener<String> listener) {
-        super(id, Url, downloadStart, fileName, fileFolder, downloadLength);
-        this.listener = listener;
-    }
-
-    @Override
-    protected void deliverResponse(String response) {
-        if (this.listener != null) {
-            this.listener.onResponse(response);
+    public DownloadRequest setDownloadFileName(String fileName) {
+        if (!"".equals(fileName)) {
+            setFileName(fileName);
         }
+        return this;
+    }
+
+    public DownloadRequest setListener(Response.Listener<DownloadReceipt> listener) {
+        this.mListener = listener;
+        return this;
+    }
+
+    public DownloadRequest setReceipt(DownloadReceipt downloadReceipt) {
+        setDownloadReceipt(downloadReceipt);
+        return this;
+    }
+
+    public void cancel() {
+        super.cancel();
+    }
+
+    public DownloadRequest setThreadPositon(int position) {
+        super.setThreadPosition(position);
+        return this;
+    }
+
+    public DownloadRequest setDownloadThreadType(int type) {
+        setThreadType(type);
+        return this;
     }
 
     @Override
-    public void deliverDownloadProgress(long fileSize, long downloadedSize) {
-        if (this.listener != null) {
-            this.listener.onProgressChange(fileSize, downloadedSize);
+    public void deliverDownloadProgress(DownloadReceipt response) {
+        if (this.mListener != null) {
+            this.mListener.onProgressChange(response);
         }
     }
 }

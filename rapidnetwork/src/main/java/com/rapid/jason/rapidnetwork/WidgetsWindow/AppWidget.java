@@ -55,8 +55,8 @@ public class AppWidget extends AppWidgetProvider {
 
         Uri uri = intent.getData();
         if (uri != null) {
-            WindowUtils windowUtils = new WindowUtils();
-            windowUtils.showPopupWindow(context);
+            /*WindowUtils windowUtils = new WindowUtils();
+            windowUtils.showPopupWindow(context);*/
         }
 
         super.onReceive(context, intent);

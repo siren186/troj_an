@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.freeload.jason.toolbox.BasicDownload;
+import com.freeload.jason.toolbox.EndingDownload;
 import com.freeload.jason.toolbox.PrepareDownload;
 
 import java.util.HashSet;
@@ -14,13 +15,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RequestQueue {
 
     /** The network dispatchers. */
-    private DownloadDispatcher[] mDispatchers;
+    private DownloadDispatcher[] mDownloadDispatchers;
+
+    /** The file dispatchers. */
+    private FileDispatcher[] mFileDispatchers;
 
     /** Number of download request dispatcher threads to start. */
     private static final int DEFAULT_DOWNLOAD_THREAD_POOL_SIZE = 4;
 
+    /** Number of file request dispatcher threads to start. */
+    private static final int DEFAULT_FILE_THREAD_POOL_SIZE = 2;
+
     /** The queue of requests that are actually going out to the network. */
     private final PriorityBlockingQueue<Request<?>> mDownloadQueue =
+            new PriorityBlockingQueue<Request<?>>();
+
+    /** The queue of requests that are actually going out to the network. */
+    private final PriorityBlockingQueue<Request<?>> mFileQueue =
             new PriorityBlockingQueue<Request<?>>();
 
     private AtomicInteger mSequenceGenerator = new AtomicInteger();
@@ -34,18 +45,23 @@ public class RequestQueue {
     /** Response delivery mechanism. */
     private final ResponseDelivery mDelivery;
 
-    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload) {
-        this(basicDownload, prepareDownload, DEFAULT_DOWNLOAD_THREAD_POOL_SIZE);
+    /** Ending download perform */
+    private final EndingDownload mEnding;
+
+    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, EndingDownload endingDownload) {
+        this(basicDownload, prepareDownload, endingDownload, DEFAULT_DOWNLOAD_THREAD_POOL_SIZE, DEFAULT_FILE_THREAD_POOL_SIZE);
     }
 
-    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, int threadPoolSize) {
-        this(basicDownload, prepareDownload, DEFAULT_DOWNLOAD_THREAD_POOL_SIZE, new ExecutorDelivery(new Handler(Looper.getMainLooper())));
+    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, EndingDownload endingDownload, int threadPoolSize, int filePoolSize) {
+        this(basicDownload, prepareDownload, endingDownload, threadPoolSize, filePoolSize, new ExecutorDelivery(new Handler(Looper.getMainLooper())));
     }
 
-    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, int threadPoolSize, ResponseDelivery delivery) {
+    public RequestQueue(BasicDownload basicDownload, PrepareDownload prepareDownload, EndingDownload endingDownload, int threadPoolSize, int filePoolSize, ResponseDelivery delivery) {
         this.mDownload = basicDownload;
         this.mPrepare = prepareDownload;
-        this.mDispatchers = new DownloadDispatcher[threadPoolSize];
+        this.mEnding = endingDownload;
+        this.mDownloadDispatchers = new DownloadDispatcher[threadPoolSize];
+        this.mFileDispatchers = new FileDispatcher[filePoolSize];
         this.mDelivery = delivery;
     }
 
@@ -63,12 +79,20 @@ public class RequestQueue {
         stop();
 
         // Create network dispatchers (and corresponding threads) up to the pool size.
-        for (int i = 0; i < mDispatchers.length; i++) {
+        for (int i = 0; i < mDownloadDispatchers.length; ++i) {
             DownloadDispatcher downloadDispatcher =
                     new DownloadDispatcher(mDownloadQueue, mDownload,
                             mPrepare, mDelivery);
-            mDispatchers[i] = downloadDispatcher;
+            mDownloadDispatchers[i] = downloadDispatcher;
             downloadDispatcher.start();
+        }
+
+        // Create file dispatchers up to the pool size.
+        for (int n = 0; n < mFileDispatchers.length; ++n) {
+            FileDispatcher fileDispatcher =
+                    new FileDispatcher(mFileQueue, mEnding, mDelivery);
+            mFileDispatchers[n] = fileDispatcher;
+            fileDispatcher.start();
         }
     }
 
@@ -76,9 +100,9 @@ public class RequestQueue {
      * Stops download dispatchers.
      */
     public void stop() {
-        for (int i = 0; i < mDispatchers.length; i++) {
-            if (mDispatchers[i] != null) {
-                mDispatchers[i].quit();
+        for (int i = 0; i < mDownloadDispatchers.length; i++) {
+            if (mDownloadDispatchers[i] != null) {
+                mDownloadDispatchers[i].quit();
             }
         }
     }
@@ -88,7 +112,7 @@ public class RequestQueue {
      * @param request The request to service
      * @return The passed-in request
      */
-    public <T> Request<T> add(Request<T> request) {
+    public <T> Request<T> addOpening(Request<T> request) {
         request.setRequestQueue(this);
         synchronized (mCurrentRequests) {
             mCurrentRequests.add(request);
@@ -97,6 +121,24 @@ public class RequestQueue {
         request.setSequence(getSequenceNumber());
 
         mDownloadQueue.add(request);
+
+        return request;
+    }
+
+    /**
+     * Adds a Request to the dispatch queue.
+     * @param request The request to service
+     * @return The passed-in request
+     */
+    public <T> Request<T> addEnding(Request<T> request) {
+        request.setRequestQueue(this);
+        synchronized (mCurrentRequests) {
+            mCurrentRequests.add(request);
+        }
+
+        request.setSequence(getSequenceNumber());
+
+        mFileQueue.add(request);
 
         return request;
     }

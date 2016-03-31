@@ -22,6 +22,7 @@ public class WindowUtils {
 
     private WindowManager.LayoutParams params = null;
 
+    private FloatWinWebPage floatWinWebPage = null;
     private FloatWinCalendar floatWinCalendar = null;
 
     private FloatView mFloatView = null;
@@ -42,12 +43,10 @@ public class WindowUtils {
         params = new WindowManager.LayoutParams();
 
         // 类型
-        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-
+        params.type = WindowManager.LayoutParams.TYPE_PHONE;
         // WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
 
         // 设置flag
-
         int flags = WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         // 如果设置了WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE，弹出的View收不到Back键的事件
         params.flags = flags;
@@ -58,8 +57,6 @@ public class WindowUtils {
         // 不设置这个flag的话，home页的划屏会有问题
 
         params.gravity = Gravity.LEFT | Gravity.TOP;
-        params.width = 200;
-        params.height = 200;
 
         params.x = 0;
         params.y = 0;
@@ -67,22 +64,29 @@ public class WindowUtils {
         mView = setUpView(context);
         mFloatView.setFloatWin(params);
 
+        params.width = mFloatView.getViewWidthEx();
+        params.height = mFloatView.getViewHeightEx();
+
         mWindowManager.addView(mView, params);
     }
 
     private View setUpView(final Context context) {
 
-         /*View view = LayoutInflater.from(context).inflate(R.layout.popupwindow, null);*/
+        //View view = LayoutInflater.from(context).inflate(R.layout.popupwindow, null);
         floatWinCalendar = new FloatWinCalendar();
+        floatWinWebPage = new FloatWinWebPage();
 
         mFloatView = new FloatView(context);//(FloatView) view.findViewById(R.id.popup_window_btn);
-        mFloatView.setImageResource(R.drawable.floatwin);
         mFloatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setComponent(new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity"));
-//                mContext.startActivity(intent);
+                /*Intent intent = new Intent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setComponent(new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity"));
+                mContext.startActivity(intent);*/
+
+                floatWinWebPage.showFloatWinWebpage(mContext);
+//                floatWinCalendar.showFloatWinCalendar(mContext);
             }
         });
 

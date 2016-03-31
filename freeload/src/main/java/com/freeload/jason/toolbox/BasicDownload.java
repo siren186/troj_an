@@ -28,7 +28,7 @@ public class BasicDownload implements Network {
         HttpURLConnection http = null;
         try {
             URL downloadUrl = new URL(request.getUrl());
-            postResponse(delivery, request, "start");
+            postResponse(request, delivery, DownloadReceipt.STATE.START);
 
             //使用Get方式下载
 
@@ -40,31 +40,37 @@ public class BasicDownload implements Network {
             http.setRequestProperty("Referer", downloadUrl.toString());
             http.setRequestProperty("Charset", "UTF-8");
 
-            int startPos = request.getDownloadStart();//开始位置
-            long endPos = request.getDownloadFileSize();
+            long startPos = request.getDownloadStart();
+            long endPos = request.getDownloadEnd();
+
             http.setRequestProperty("Range", "bytes=" + startPos + "-"+ endPos);//设置获取实体数据的范围
             http.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)");
             http.setRequestProperty("Connection", "Keep-Alive");
 
             int exception = http.getResponseCode();
             switch (exception) {
-                case 200 : transferData(request, delivery, downloadLength, http);
-                    return;
-                case 206 : transferData(request, delivery, downloadLength, http);
-                    return;
+                case 200 :
+                case 206 :
+                    transferData(request, delivery, downloadLength, http);
+                    break;
                 case 301:
                 case 302:
                 case 303:
                 case 307:
+                    postResponse(request, delivery, DownloadReceipt.STATE.CONNWRONG);
                     break;
                 case 416:
                 case 500:
                 case 503:
+                    postResponse(request, delivery, DownloadReceipt.STATE.TIMEOUT);
+                    break;
                 default:
+                    postResponse(request, delivery, DownloadReceipt.STATE.CONNWRONG);
                     break;
             }
 
         } catch (Exception e) {
+            postResponse(request, delivery, DownloadReceipt.STATE.CONNWRONG);
         } finally {
             if (http != null) {
                 http.disconnect();
@@ -73,18 +79,22 @@ public class BasicDownload implements Network {
     }
 
     private void transferData(Request<?> request, ResponseDelivery delivery, long downloadLength, HttpURLConnection http) throws IOException {
-        InputStream inStream = http.getInputStream();
+        InputStream inStream = null;
         byte[] buffer = new byte[1024];
+
         int offset = 0;
-        int startPos = request.getDownloadStart();
-        long endPos = request.getDownloadFileSize();
+        long startPos = request.getWriteFileStart();
+        long endPos = request.getWriteFileEnd();
+
         RandomAccessFile threadfile = new RandomAccessFile(request.getSaveFile(), "rwd");
         threadfile.seek(startPos);
+
+        inStream = http.getInputStream();
 
         while (true) {
             offset = inStream.read(buffer, 0, 1024);
             if (offset == -1) {
-                postResponse(delivery, request, "finish");
+                postResponse(request, delivery, DownloadReceipt.STATE.SUCCESS_DOWNLOAD);
                 break;
             }
 
@@ -92,28 +102,39 @@ public class BasicDownload implements Network {
             downloadLength += offset;
 
             if (request.isCanceled()) {
-                postResponse(delivery, request, "cancel");
+                postResponse(request, delivery, DownloadReceipt.STATE.CANCEL);
                 break;
             }
 
-            postProgress(request, delivery, endPos, downloadLength + startPos);
+            postProgress(request, delivery, DownloadReceipt.STATE.DOWNLOAD, startPos + downloadLength, endPos);
         }
 
         threadfile.close();
         inStream.close();
     }
 
-    private void postProgress(Request<?> request, ResponseDelivery delivery, long downLoadFileSize, long downloadLength) {
+    private void postResponse(Request<?> request, ResponseDelivery delivery, DownloadReceipt.STATE state) {
         if (delivery == null) {
             return;
         }
-        delivery.postDownloadProgress(request, downLoadFileSize, downloadLength);
+        DownloadReceipt downloadReceipt = getDownloadReceipt(request, state, 0, 0);
+        delivery.postResponse(request, Response.success(downloadReceipt));
     }
 
-    private void postResponse(ResponseDelivery delivery, Request<?> request, String state) {
+    private void postProgress(Request<?> request, ResponseDelivery delivery, DownloadReceipt.STATE state, long downLoadFileSize, long downloadLength) {
         if (delivery == null) {
             return;
         }
-        delivery.postResponse(request, Response.success(state));
+        DownloadReceipt downloadReceipt = getDownloadReceipt(request, state, downLoadFileSize, downloadLength);
+        delivery.postResponse(request, Response.success(downloadReceipt));
+    }
+
+    private DownloadReceipt getDownloadReceipt(Request<?> request, DownloadReceipt.STATE state, long downLoadFileSize, long downloadLength) {
+        DownloadReceipt downloadReceipt = new DownloadReceipt();
+        downloadReceipt.setDownloadPosition(request.getThreadPosition());
+        downloadReceipt.setDownloadState(state);
+        downloadReceipt.setDownloadedSize(downLoadFileSize);
+        downloadReceipt.setDownloadTotalSize(downloadLength);
+        return downloadReceipt;
     }
 }

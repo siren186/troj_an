@@ -34,7 +34,7 @@ public class WidgetService extends Service {
         super.onStartCommand(intent, flags, startId);
         System.out.println("WidgetService:onStartCommand");
 
-        Uri uri = intent.getData();
+        /*Uri uri = intent.getData();
         if (uri == null) {
             return 0;
         }
@@ -46,7 +46,14 @@ public class WidgetService extends Service {
             intentBroadcast.setAction("com.rapid.jason.rapidnetwork.FloatWindow");
             intentBroadcast.putExtra("floatwin", "show");
             sendBroadcast(intentBroadcast);
-        }
+        }*/
+
+        WidgetObservable widgetObservable = new WidgetObservable();
+        WidgetObserver widgetObserver = new WidgetObserver(widgetObservable);
+        widgetObservable.setData(4);
+        widgetObservable.setData(6);
+        widgetObservable.setData(2);
+        widgetObservable.setData(1);
 
         return 1;
     }

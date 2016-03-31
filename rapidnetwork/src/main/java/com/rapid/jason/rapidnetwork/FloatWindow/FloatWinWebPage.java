@@ -9,17 +9,24 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.CalendarView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.rapid.jason.rapidnetwork.CollectPreferencesManager;
+import com.rapid.jason.rapidnetwork.DownloadFile.DownloadEvent;
+import com.rapid.jason.rapidnetwork.MainApplication;
 import com.rapid.jason.rapidnetwork.R;
 
-import java.util.Calendar;
+import de.greenrobot.event.EventBus;
 
-public class FloatWinCalendar {
+public class FloatWinWebPage {
 
-    private final String LOG_TAG = FloatWinCalendar.class.getSimpleName();
+    private final String LOG_TAG = FloatWinWebPage.class.getSimpleName();
+
     private View mView = null;
     private WindowManager mWindowManager = null;
     private Context mContext = null;
@@ -29,19 +36,21 @@ public class FloatWinCalendar {
     private WindowManager.LayoutParams params = null;
 
     private View mWindowView = null;
-
+    private WebView mWebView = null;
+    private TextView mTextView = null;
     private ImageButton mCloseBtn = null;
+    private ImageButton mCollectBtn = null;
 
-    public void showFloatWinCalendar(final Context context) {
+    private String mWebUrl = "http://www.baidu.com";
+
+    public void showFloatWinWebpage(final Context context) {
         if (isShown) {
             return;
         }
 
         isShown = true;
 
-        // 获取应用的Context
         mContext = context.getApplicationContext();
-        // 获取WindowManager
         mWindowManager = (WindowManager) mContext
                 .getSystemService(Context.WINDOW_SERVICE);
 
@@ -49,21 +58,13 @@ public class FloatWinCalendar {
 
         params = new WindowManager.LayoutParams();
 
-        // 类型
         params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
 
         // WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
 
-        // 设置flag
-
         int flags = WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        // 如果设置了WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE，弹出的View收不到Back键的事件
         params.flags = flags;
-        // 不设置这个弹出框的透明遮罩显示为黑色
         params.format = PixelFormat.TRANSLUCENT;
-        // FLAG_NOT_TOUCH_MODAL不阻塞事件传递到后面的窗口
-        // 设置 FLAG_NOT_FOCUSABLE 悬浮窗口较小时，后面的应用图标由不可长按变为可长按
-        // 不设置这个flag的话，home页的划屏会有问题
 
         Point point = new Point();
         mWindowManager.getDefaultDisplay().getSize(point);
@@ -78,7 +79,7 @@ public class FloatWinCalendar {
         mWindowManager.addView(mView, params);
     }
 
-    public void hideFloatWinCalendar() {
+    public void hideFloatWinWebpage() {
         if (isShown && null != mView) {
             mWindowManager.removeView(mView);
             isShown = false;
@@ -87,7 +88,7 @@ public class FloatWinCalendar {
 
     private View setUpView(final Context context) {
         View view = null;
-        view = LayoutInflater.from(context).inflate(R.layout.floatwin_calendar, null);
+        view = LayoutInflater.from(context).inflate(R.layout.floatwin_webpage, null);
 
         setTouchAction(view);
 
@@ -95,20 +96,41 @@ public class FloatWinCalendar {
     }
 
     private void setTouchAction(View view) {
-        mCloseBtn = (ImageButton) view.findViewById(R.id.floatwin_calendar_btn_close);
+        mCloseBtn = (ImageButton) view.findViewById(R.id.floatwin_webpage_btn_close);
         mCloseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideFloatWinCalendar();
+                hideFloatWinWebpage();
             }
         });
 
-        MaterialCalendarView calendarView = (MaterialCalendarView) view.findViewById(R.id.calendarView);
+        mCollectBtn = (ImageButton) view.findViewById(R.id.floatwin_webpage_btn_collect);
+        mCollectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CollectPreferencesManager.getInstance().setCollectionWeb(mWebUrl);
+                Toast.makeText(MainApplication.mContext, "收藏" + mWebUrl, Toast.LENGTH_SHORT).show();
+                EventBus.getDefault().post(new DownloadEvent("flash"));
+            }
+        });
 
-        Calendar calendar = Calendar.getInstance();
-        calendarView.setCurrentDate(calendar);
+        mWebView = (WebView) view.findViewById(R.id.floatwin_webpage_webView);
+        mWebView.loadUrl(mWebUrl);
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+        WebSettings settings = mWebView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        mWebView.requestFocus(View.FOCUS_DOWN);
 
-        mWindowView = view.findViewById(R.id.floatwin_calendar_layout);
+        mTextView = (TextView) view.findViewById(R.id.floatwin_webpage_text_url);
+        mTextView.setText(mWebUrl);
+
+        mWindowView = view.findViewById(R.id.floatwin_webpage_layout);
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -121,7 +143,7 @@ public class FloatWinCalendar {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (!isEffectiveArea(X, Y, rect)) {
-                            hideFloatWinCalendar();
+                            hideFloatWinWebpage();
                         }
                         break;
                 }

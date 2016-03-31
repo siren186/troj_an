@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.rapid.jason.rapidnetwork.R;
+import com.rapid.jason.rapidnetwork.WidgetsWindow.WidgetObservable;
+import com.rapid.jason.rapidnetwork.WidgetsWindow.WidgetObserver;
 
 import java.io.File;
 import java.util.Vector;
