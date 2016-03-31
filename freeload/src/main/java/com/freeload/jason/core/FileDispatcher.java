@@ -1,25 +1,20 @@
 package com.freeload.jason.core;
 
 import android.os.Process;
-import android.os.SystemClock;
 
-import com.freeload.jason.toolbox.BasicDownload;
-import com.freeload.jason.toolbox.PrepareDownload;
+import com.freeload.jason.toolbox.EndingDownload;
 
 import java.util.concurrent.BlockingQueue;
 
-public class DownloadDispatcher extends Thread {
+public class FileDispatcher  extends Thread {
 
     private boolean finish = false;
 
+    /** Ending download perform */
+    private final EndingDownload mEnding;
+
     /** The queue of requests to service. */
     private final BlockingQueue<Request<?>> mQueue;
-
-    /** The download interface for processing requests. */
-    private final BasicDownload mDownload;
-
-    /** The prepare interface for prepare download. */
-    private final PrepareDownload mPrepare;
 
     /** For posting responses and errors. */
     private final ResponseDelivery mDelivery;
@@ -27,11 +22,10 @@ public class DownloadDispatcher extends Thread {
     /** Used for telling us to die. */
     private volatile boolean mQuit = false;
 
-    public DownloadDispatcher(BlockingQueue<Request<?>> queue, BasicDownload basicDownload,
-                              PrepareDownload prepareDownload, ResponseDelivery delivery) {
+    public FileDispatcher(BlockingQueue<Request<?>> queue, EndingDownload endingDownload,
+                          ResponseDelivery delivery) {
         this.mQueue = queue;
-        this.mDownload = basicDownload;
-        this.mPrepare = prepareDownload;
+        this.mEnding = endingDownload;
         this.mDelivery = delivery;
     }
 
@@ -41,7 +35,7 @@ public class DownloadDispatcher extends Thread {
 
     @Override
     public void run() {
-        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+        android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         while (true) {
             Request<?> request;
             try {
@@ -59,12 +53,7 @@ public class DownloadDispatcher extends Thread {
                 continue;
             }
 
-            boolean prepare = mPrepare.preparePerform(request, mDelivery);
-            if (!prepare) {
-                continue;
-            }
-
-            mDownload.performRequest(request, mDelivery);
+            mEnding.endingPerform(request, mDelivery);
 
             request.finish();
         }

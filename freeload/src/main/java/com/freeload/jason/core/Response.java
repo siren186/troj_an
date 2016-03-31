@@ -5,7 +5,7 @@ public class Response<T> {
     /** Callback interface for delivering parsed responses. */
     public interface Listener<T> {
         /** Called a download response progress. */
-        public void onProgressChange(long fileSize, long downloadedSize, T response);
+        public void onProgressChange(T response);
     }
 
     /** Callback interface for delivering error responses. */

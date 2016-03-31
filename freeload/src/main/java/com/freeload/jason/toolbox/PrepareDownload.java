@@ -1,5 +1,6 @@
 package com.freeload.jason.toolbox;
 
+import com.freeload.jason.core.DownloadThreadType;
 import com.freeload.jason.core.Prepare;
 import com.freeload.jason.core.Request;
 import com.freeload.jason.core.Response;
@@ -19,16 +20,24 @@ public class PrepareDownload implements Prepare {
 
     @Override
     public boolean preparePerform(Request<?> request, ResponseDelivery delivery) {
-        postResponse(delivery, request, "get file size");
+        postResponse(delivery, request, DownloadReceipt.STATE.GETSIZE);
         long downloadFileSize = getFileSize(request);
         if (downloadFileSize <= 0) {
+            postResponse(delivery, request, DownloadReceipt.STATE.FAILED_GETSIZE);
             return false;
         }
         request.setDownloadFileSize(downloadFileSize);
 
-        postResponse(delivery, request, "create file");
+        postResponse(delivery, request, DownloadReceipt.STATE.QUEST_PREPARE);
+        boolean bParse = parseReceipt(request, downloadFileSize);
+        if (!bParse) {
+            postResponse(delivery, request, DownloadReceipt.STATE.FAILED_QUEST_PREPARE);
+        }
+
+        postResponse(delivery, request, DownloadReceipt.STATE.CREATEFILE);
         File saveFile = createFile(request);
         if (saveFile == null) {
+            postResponse(delivery, request, DownloadReceipt.STATE.FAILED_CREATEFILE);
             return false;
         }
         request.setDownloadFile(saveFile);
@@ -36,11 +45,74 @@ public class PrepareDownload implements Prepare {
         return true;
     }
 
-    private void postResponse(ResponseDelivery delivery, Request<?> request, String state) {
+    private boolean parseReceipt(Request<?> request, long downloadFileSize) {
+        boolean bRes = true;
+        int threadType = request.getThreadType();
+        switch (threadType) {
+            case DownloadThreadType.NORMAL:
+                bRes = setQuestDownloadSizeInfo(request, downloadFileSize, 1);
+                break;
+            case DownloadThreadType.DOUBLETHREAD:
+                bRes = setQuestDownloadSizeInfo(request, downloadFileSize, 2);
+                break;
+            default:
+                bRes = setQuestDownloadSizeInfo(request, downloadFileSize, 1);
+                break;
+        }
+        return bRes;
+    }
+
+    private boolean setQuestDownloadSizeInfo(Request<?> request, long downloadFileSize, int division) {
+        long perSize = downloadFileSize / division;
+        int nPos = request.getThreadPosition();
+
+        String fileName = request.getFileName();
+        fileName += "" + nPos;
+        request.setFileName(fileName);
+
+        DownloadReceipt downloadReceipt = request.getDownloadReceipt();
+        int pos = nPos - 1;
+        pos = ( pos >= 0 ? pos : 0 );
+        if (downloadReceipt == null) {
+            request.setDownloadStart(perSize * pos);
+        } else {
+            long lSize = downloadReceipt.getDownloadedSize(nPos);
+            request.setDownloadStart(lSize == 0 ? (perSize * pos) : lSize);
+        }
+
+        if (downloadReceipt == null) {
+            request.setWriteFileStart(0);
+        } else {
+            long lSize = downloadReceipt.getDownloadedSize(nPos);
+            request.setWriteFileStart(lSize - (perSize * pos));
+        }
+
+        if (division == 1 || nPos == division) {
+            request.setDownloadEnd(downloadFileSize);
+            request.setWriteFileEnd(downloadFileSize - (perSize * pos));
+        } else {
+            request.setDownloadEnd(perSize * nPos - 1);
+            request.setWriteFileEnd(perSize * nPos - 1);
+        }
+
+        if (division == 1) {
+            request.setDownloadFilePerSize(downloadFileSize);
+        } else {
+            request.setDownloadFilePerSize(perSize);
+        }
+
+        return true;
+    }
+
+    private void postResponse(ResponseDelivery delivery, Request<?> request, DownloadReceipt.STATE state) {
         if (delivery == null) {
             return;
         }
-        delivery.postResponse(request, Response.success("position" + request.getThreadPosition() + ":" + state));
+        DownloadReceipt downloadReceipt = new DownloadReceipt();
+        downloadReceipt.setDownloadPosition(request.getThreadPosition());
+        downloadReceipt.setDownloadState(state);
+
+        delivery.postResponse(request, Response.success(downloadReceipt));
     }
 
     private File createFile(Request<?> request) {
@@ -52,8 +124,24 @@ public class PrepareDownload implements Prepare {
 
         try {
             RandomAccessFile randOut = new RandomAccessFile(saveFile, "rw");
-            if(request.getDownloadFileSize() > 0) {
-                randOut.setLength(request.getDownloadFileSize());
+            switch (request.getThreadType()) {
+                case DownloadThreadType.NORMAL:
+                    if(request.getDownloadFileSize() > 0) {
+                        randOut.setLength(request.getDownloadFileSize());
+                    }
+                    break;
+                case DownloadThreadType.DOUBLETHREAD:
+                    if (request.getThreadPosition() == 2) {
+                        randOut.setLength(request.getDownloadFileSize() - request.getDownloadFilePerSize());
+                    } else {
+                        randOut.setLength(request.getDownloadFilePerSize());
+                    }
+                    break;
+                default:
+                    if(request.getDownloadFileSize() > 0) {
+                        randOut.setLength(request.getDownloadFileSize());
+                    }
+                    break;
             }
             randOut.close();
         } catch (FileNotFoundException e) {

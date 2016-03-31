@@ -3,6 +3,8 @@ package com.freeload.jason.core;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.freeload.jason.toolbox.DownloadReceipt;
+
 import java.io.File;
 
 public abstract class Request<T> implements Comparable<Request<T>> {
@@ -20,7 +22,16 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     private final int mId;
 
     /** download start position. */
-    private int mDownloadStart = 0;
+    private long mDownloadStart = 0;
+
+    /** download end position. */
+    private long mDownloadEnd = 0;
+
+    /** write file start position. */
+    private long mWriteFileStart = 0;
+
+    /** write file end position. */
+    private long mWriteFileEnd = 0;
 
     /** URL of this request. */
     private final String mUrl;
@@ -31,28 +42,40 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /** save file size. */
     private long mDownloadFileSize = 0;
 
+    /** save file size. */
+    private long mDownloadFilePerSize = 0;
+
     /** download file name. */
-    private final String mFileName;
+    private String mFileName;
 
     /** download file parent folder. */
     private final String mFileFolder;
 
-    /** download file thread setting*/
+    /** download file thread setting */
     private int mThreadType = DownloadThreadType.NORMAL;
 
-    /** download file thread position*/
-    private int mThreadPosition = -1;
+    /** download file thread position */
+    private int mThreadPosition = 0;
+
+    /** download file receipt */
+    private DownloadReceipt mDownloadReceipt = null;
 
     private final static String fileSaveDir = Environment.getExternalStorageDirectory() + "/freeload/downloadfile";
 
-    protected Request(int id, String Url, int downloadStart, String fileName, String fileFolder, int downloadFileSize) {
+    protected Request(int id, String Url, String fileFolder) {
         this.mId = id;
         this.mUrl = Url;
-        this.mDownloadStart = downloadStart;
-        this.mDownloadFileSize = downloadFileSize;
 
         this.mFileFolder = setFileFolder(fileFolder);
-        this.mFileName = setFileName(Url, fileName);
+        this.mFileName = setDefaultFileName(Url);
+    }
+
+    public void setDownloadReceipt(DownloadReceipt downloadReceipt) {
+        this.mDownloadReceipt = downloadReceipt;
+    }
+
+    public DownloadReceipt getDownloadReceipt() {
+        return this.mDownloadReceipt;
     }
 
     private String setFileFolder(String fileFolder) {
@@ -65,19 +88,14 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         return downloadFileFolder;
     }
 
-    private String setFileName(String Url, String fileName) {
+    private String setDefaultFileName(String Url) {
         String downloadFileName;
-        if (fileName == null) {
-            Uri uri = Uri.parse(Url);
-            String strPath = uri.getPath();
-            downloadFileName = strPath.substring(strPath.lastIndexOf('/') + 1, strPath.length());
-        } else {
-            downloadFileName = fileName;
-        }
 
-        if (mThreadPosition > -1) {
-            downloadFileName += ("tmp" + mThreadPosition);
-        }
+        Uri uri = Uri.parse(Url);
+        String strPath = uri.getPath();
+        downloadFileName = strPath.substring(strPath.lastIndexOf('/') + 1, strPath.length());
+
+        downloadFileName += ".tmp";
         return downloadFileName;
     }
 
@@ -93,7 +111,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         this.mThreadType = type;
     }
 
-    protected int getThreadType() {
+    public int getThreadType() {
         return this.mThreadType;
     }
 
@@ -172,12 +190,39 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /**
      * Returns the start position of this request download.
      */
-    public int getDownloadStart() {
+    public long getDownloadStart() {
         return mDownloadStart;
     }
 
-    public void setDownloadStart(int downloadStart) {
+    public void setDownloadStart(long downloadStart) {
         this.mDownloadStart = downloadStart;
+    }
+
+    public long getWriteFileStart() {
+        return mWriteFileStart;
+    }
+
+    public void setWriteFileStart(long writeFileStart) {
+        this.mWriteFileStart = writeFileStart;
+    }
+
+    /**
+     * Returns the end position of this request download.
+     */
+    public long getDownloadEnd() {
+        return mDownloadEnd;
+    }
+
+    public void setDownloadEnd(long downloadEnd) {
+        this.mDownloadEnd = downloadEnd;
+    }
+
+    public long getWriteFileEnd() {
+        return mWriteFileEnd;
+    }
+
+    public void setWriteFileEnd(long writeFileEnd) {
+        this.mWriteFileEnd = writeFileEnd;
     }
 
     /**
@@ -201,11 +246,23 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         mDownloadFileSize = downloadFileSize;
     }
 
+    public long getDownloadFilePerSize() {
+        return mDownloadFilePerSize;
+    }
+
+    public void setDownloadFilePerSize(long downloadFileperSize) {
+        mDownloadFilePerSize = downloadFileperSize;
+    }
+
     /**
      * @return download file name.
      */
     public String getFileName() {
         return mFileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.mFileName = fileName;
     }
 
     /**
@@ -244,5 +301,5 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     }
 
     /** Delivers when download request progress change to the Listener. */
-    public abstract void deliverDownloadProgress(long fileSize, long downloadedSize, T response);
+    public abstract void deliverDownloadProgress(T response);
 }

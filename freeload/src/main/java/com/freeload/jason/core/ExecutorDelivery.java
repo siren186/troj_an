@@ -58,7 +58,7 @@ public class ExecutorDelivery implements ResponseDelivery {
                 return;
             }
 
-            mRequest.deliverDownloadProgress(mFileSize, mDownloadedSize, mResponse.result);
+            mRequest.deliverDownloadProgress(mResponse.result);
         }
     }
 }
