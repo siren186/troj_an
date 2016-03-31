@@ -9,21 +9,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.freeload.jason.core.DownloadThreadType;
 import com.freeload.jason.core.RequestQueue;
 import com.freeload.jason.core.Response;
-import com.freeload.jason.dbtool.FreeloadDbManager;
-import com.freeload.jason.toolbox.DownloadRequest;
-import com.freeload.jason.toolbox.Freeload;
+import com.freeload.jason.toolbox.DownloadRequestManager;
+import com.freeload.jason.toolbox.EscapeReceipt;
 import com.rapid.jason.rapidnetwork.R;
 
-import java.util.ArrayList;
-
 import de.greenrobot.event.EventBus;
-import rx.*;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class DownloadActivity extends Activity {
 
@@ -37,10 +30,7 @@ public class DownloadActivity extends Activity {
     private TextView text = null;
     private TextView text1 = null;
 
-    private FreeloadDbManager dbManager = null;
-    private DownloadFileDb fileDownload = null;
-
-    private DownloadRequest request = null;
+    private DownloadRequestManager request = null;
 
     private int mDownloadSize = 0;
 
@@ -50,22 +40,19 @@ public class DownloadActivity extends Activity {
         setContentView(R.layout.activity_download);
 
         EventBus.getDefault().register(this);
-        requestQueue = Freeload.newRequestQueue(this);
-
-        dbManager = new FreeloadDbManager(this, "freeload.db", 1, DownloadFileDb.class);
+        //requestQueue = Freeload.newRequestQueue(this);
 
         text = (TextView) findViewById(R.id.textView);
         text1 = (TextView) findViewById(R.id.textView1);
 
-        fileDownload = new DownloadFileDb(1, "shoujiyingyongshichang_1.apk", 0, 1);
-        dbManager.insert(fileDownload);
+        //fileDownload = new DownloadFileDb(1, "shoujiyingyongshichang_1.apk", 0, 1);
 
         button2 = (Button) findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                request.cancel();
+                //request.cancel();
             }
         });
 
@@ -73,19 +60,15 @@ public class DownloadActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                request = DownloadRequest.create(1, Url, mDownloadSize)
-                    .setListener(new Response.Listener<String>() {
-                        @Override
-                        public void onProgressChange(long l, long l1, String s) {
-                            EventBus.getDefault().post(new DownloadEvent(s));
-
-                            text.setText("" + l);
-                            text1.setText("" + l1);
-
-                            mDownloadSize = (int) l1;
-                        }
-                    })
-                    .addRequestQueue(requestQueue);
+                request = DownloadRequestManager.create(1, Url)
+                        .setDownloadThreadType(DownloadThreadType.DOUBLETHREAD)
+                        .setListener(new Response.Listener<EscapeReceipt>() {
+                            @Override
+                            public void onProgressChange(EscapeReceipt s) {
+                                System.out.println(s.toString());
+                            }
+                        })
+                        .addRequestQueue(requestQueue);
             }
         });
 
