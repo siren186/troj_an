@@ -14,6 +14,7 @@ import com.freeload.jason.core.RequestQueue;
 import com.freeload.jason.core.Response;
 import com.freeload.jason.toolbox.DownloadRequestManager;
 import com.freeload.jason.toolbox.EscapeReceipt;
+import com.freeload.jason.toolbox.Freeload;
 import com.rapid.jason.rapidnetwork.R;
 
 import de.greenrobot.event.EventBus;
@@ -40,7 +41,7 @@ public class DownloadActivity extends Activity {
         setContentView(R.layout.activity_download);
 
         EventBus.getDefault().register(this);
-        //requestQueue = Freeload.newRequestQueue(this);
+        requestQueue = Freeload.newRequestQueue(this);
 
         text = (TextView) findViewById(R.id.textView);
         text1 = (TextView) findViewById(R.id.textView1);
