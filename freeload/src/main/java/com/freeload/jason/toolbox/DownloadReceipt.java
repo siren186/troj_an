@@ -78,7 +78,7 @@ public class DownloadReceipt implements Serializable {
         if (mListDownloadSize.size() <= 0 || mListDownloadSize.size() < pos) {
             return 0;
         }
-        return mListDownloadSize.get(pos);
+        return mListDownloadSize.get(0);
     }
 
     public void setDownloadTotalSize(long downloadTotalSize) {

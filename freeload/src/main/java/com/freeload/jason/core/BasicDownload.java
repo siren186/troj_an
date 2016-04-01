@@ -1,9 +1,10 @@
-package com.freeload.jason.toolbox;
+package com.freeload.jason.core;
 
 import com.freeload.jason.core.Network;
 import com.freeload.jason.core.Request;
 import com.freeload.jason.core.Response;
 import com.freeload.jason.core.ResponseDelivery;
+import com.freeload.jason.toolbox.DownloadReceipt;
 
 import java.io.IOException;
 import java.io.InputStream;

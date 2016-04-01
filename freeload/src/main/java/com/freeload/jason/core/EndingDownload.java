@@ -1,10 +1,11 @@
-package com.freeload.jason.toolbox;
+package com.freeload.jason.core;
 
 import com.freeload.jason.core.DownloadThreadType;
 import com.freeload.jason.core.Ending;
 import com.freeload.jason.core.Request;
 import com.freeload.jason.core.Response;
 import com.freeload.jason.core.ResponseDelivery;
+import com.freeload.jason.toolbox.DownloadReceipt;
 
 import java.io.File;
 import java.io.FileNotFoundException;
