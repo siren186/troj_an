@@ -2,8 +2,6 @@ package com.freeload.jason.core;
 
 import android.os.Process;
 
-import com.freeload.jason.toolbox.EndingDownload;
-
 import java.util.concurrent.BlockingQueue;
 
 public class FileDispatcher  extends Thread {

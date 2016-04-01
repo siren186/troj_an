@@ -3,10 +3,6 @@ package com.freeload.jason.core;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.freeload.jason.toolbox.BasicDownload;
-import com.freeload.jason.toolbox.EndingDownload;
-import com.freeload.jason.toolbox.PrepareDownload;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;

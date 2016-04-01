@@ -1,10 +1,6 @@
 package com.freeload.jason.core;
 
 import android.os.Process;
-import android.os.SystemClock;
-
-import com.freeload.jason.toolbox.BasicDownload;
-import com.freeload.jason.toolbox.PrepareDownload;
 
 import java.util.concurrent.BlockingQueue;
 

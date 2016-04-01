@@ -32,7 +32,9 @@ public class DownloadRequest extends Request<DownloadReceipt> {
     }
 
     public DownloadRequest setReceipt(DownloadReceipt downloadReceipt) {
-        setDownloadReceipt(downloadReceipt);
+        if (downloadReceipt != null) {
+            setDownloadReceipt(downloadReceipt);
+        }
         return this;
     }
 

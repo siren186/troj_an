@@ -14,7 +14,7 @@ public class DownloadRequestManager {
     private final String mUrl;
 
     /** download file receipt */
-    private DownloadReceipt mDownloadReceipt = null;
+    private EscapeReceipt mCustomerReceipt = null;
 
     /** download file receipt */
     private EscapeReceipt mEscapeReceipt = null;
@@ -40,6 +40,7 @@ public class DownloadRequestManager {
         this.mUrl = Url;
 
         mEscapeReceipt = new EscapeReceipt();
+        mCustomerReceipt = new EscapeReceipt();
         mDownloadRequestList = new ArrayList<DownloadRequest>();
     }
 
@@ -53,8 +54,8 @@ public class DownloadRequestManager {
         return this;
     }
 
-    public DownloadRequestManager setDownloadReceipt(DownloadReceipt downloadReceipt) {
-        this.mDownloadReceipt = downloadReceipt;
+    public DownloadRequestManager setEscapeReceipt(String receipt) {
+        this.mCustomerReceipt.setCustomerReceipt(receipt);
         return this;
     }
 
@@ -105,6 +106,7 @@ public class DownloadRequestManager {
     private DownloadRequest createMulitDownloadRequest(int position, int threadType) {
         return DownloadRequest.create(this.mId, this.mUrl)
                 .setThreadPositon(position)
+                .setReceipt(mCustomerReceipt.getDownloadReceipt(position))
                 .setDownloadFileName(mFileName)
                 .setDownloadThreadType(threadType)
                 .setListener(new Response.Listener<DownloadReceipt>() {

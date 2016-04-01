@@ -2,6 +2,9 @@ package com.freeload.jason.toolbox;
 
 import android.content.Context;
 
+import com.freeload.jason.core.BasicDownload;
+import com.freeload.jason.core.EndingDownload;
+import com.freeload.jason.core.PrepareDownload;
 import com.freeload.jason.core.RequestQueue;
 
 public class Freeload {
