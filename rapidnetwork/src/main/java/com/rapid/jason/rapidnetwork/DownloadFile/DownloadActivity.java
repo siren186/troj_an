@@ -33,7 +33,7 @@ public class DownloadActivity extends Activity {
 
     private DownloadRequestManager request = null;
 
-    private int mDownloadSize = 0;
+    private String receipt = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class DownloadActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                //request.cancel();
+                request.cancel();
             }
         });
 
@@ -62,11 +62,14 @@ public class DownloadActivity extends Activity {
             @Override
             public void onClick(View v) {
                 request = DownloadRequestManager.create(1, Url)
-                        .setDownloadThreadType(DownloadThreadType.DOUBLETHREAD)
+                        .setEscapeReceipt(receipt)
+                        .setDownloadThreadType(DownloadThreadType.NORMAL)
                         .setListener(new Response.Listener<EscapeReceipt>() {
                             @Override
                             public void onProgressChange(EscapeReceipt s) {
                                 System.out.println(s.toString());
+                                receipt = s.toString();
+
                             }
                         })
                         .addRequestQueue(requestQueue);
