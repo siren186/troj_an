@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
         tools:drawableTop="@drawable/selector_bottom_tab_item_0_icon"
         android:drawablePadding="5dp"
         android:gravity="center_horizontal"
