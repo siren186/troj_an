@@ -13,70 +13,96 @@ import java.util.zip.ZipFile;
  */
 public class ChannelUtils {
 
-    private static String mChannel = null;
-    private static final String mDefaultChannel = "0";
-    private static final String mMark = "_";
-    private static final String mKeyOfChannelFileName = "07c147591e804f5f" + mMark;
+    private volatile static ChannelUtils s_instance = null;
+    private String mChannel = null;
 
-    public synchronized static String getChannel(String apkPath) {
-        if (TextUtils.isEmpty(mChannel)) {
-            mChannel = getChannelImpl(apkPath);
-        }
+    public static String getChannel(final String apkPath) {
+        return getInstance(apkPath).getChannel();
+    }
+
+    private String getChannel() {
         return mChannel;
     }
 
-    private static String getChannelImpl(String apkPath) {
-        String fileName = getChannelFileName(apkPath);
-        String channel = parseFileName2Channel(fileName);
-
-        if (TextUtils.isEmpty(channel)) {
-            channel = mDefaultChannel;
-        }
-
-        return channel;
+    private void setChannel(final String channel) {
+        mChannel = channel;
     }
 
-    private static String getChannelFileName(String apkPath) {
-        if (TextUtils.isEmpty(apkPath)) {
-            return null;
-        }
+    private ChannelUtils(final String apkPath) {
+        setChannel(ChannelUtilsImpl.getChannelImpl(apkPath));
+    }
 
-        String fileName = null;
-        ZipFile zipfile = null;
-        try {
-            zipfile = new ZipFile(apkPath);
-            Enumeration<?> entries = zipfile.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = ((ZipEntry) entries.nextElement());
-                String entryName = entry.getName();
-                if (entryName.startsWith(mKeyOfChannelFileName)) {
-                    fileName = entryName;
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (zipfile != null) {
-                try {
-                    zipfile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+    private static ChannelUtils getInstance(final String apkPath) {
+        if (null == s_instance) {
+            synchronized (ChannelUtils.class) {
+                if (null == s_instance) {
+                    s_instance = new ChannelUtils(apkPath);
                 }
             }
         }
-
-        return fileName;
+        return s_instance;
     }
 
-    private static String parseFileName2Channel(String fileName) {
-        String channel = null;
-        if (!TextUtils.isEmpty(fileName)) {
-            String[] split = fileName.split(mMark);
-            if (split.length >= 2) {
-                channel = fileName.substring(split[0].length() + 1);
+    private static class ChannelUtilsImpl {
+
+        private static final String DEFAULT_CHANNEL = "0";
+        private static final String SPLITTER = "_";
+        private static final String CHANNEL_FILE_FLAG = "META-INF/07c1" + SPLITTER;
+
+        private static String getChannelImpl(final String apkPath) {
+            String fileName = getChannelFileName(apkPath);
+            android.util.Log.e("yaoyuliang", "***fileName=" + fileName);
+            String channel = parseFileName2Channel(fileName);
+
+            if (TextUtils.isEmpty(channel)) {
+                channel = DEFAULT_CHANNEL;
             }
+
+            return channel;
         }
-        return channel;
+
+        private static String getChannelFileName(final String apkPath) {
+            if (TextUtils.isEmpty(apkPath)) {
+                return null;
+            }
+
+            String fileName = null;
+            ZipFile zipfile = null;
+            try {
+                zipfile = new ZipFile(apkPath);
+                Enumeration<?> entries = zipfile.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = ((ZipEntry) entries.nextElement());
+                    String entryName = entry.getName();
+                    if (entryName.startsWith(CHANNEL_FILE_FLAG)) {
+                        fileName = entryName;
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (zipfile != null) {
+                    try {
+                        zipfile.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return fileName;
+        }
+
+        private static String parseFileName2Channel(final String fileName) {
+            String channel = null;
+            if (!TextUtils.isEmpty(fileName)) {
+                String[] split = fileName.split(SPLITTER);
+                if (split.length >= 2) {
+                    channel = fileName.substring(split[0].length() + 1);
+                }
+            }
+            return channel;
+        }
     }
 }
