@@ -1,13 +1,15 @@
 package com.monet.furansujin;
 
+import android.text.TextUtils;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * 渠道工具
- * 原理: 通过读取apk包中的META-INF文件夹下的一个空文件夹的名字,来取得渠道号.
+ * 渠道号工具
+ * 原理: 通过读取apk包中的META-INF文件夹下的一个空文件的名字,来取得渠道号.
  * 优点: 无需重新编译apk包,使用脚本即可快速批量修改渠道号.
  * 用法:
  */
@@ -51,7 +53,6 @@ public class ChannelUtils {
 
         private static String getChannelImpl(final String apkPath) {
             String fileName = getChannelFileName(apkPath);
-            android.util.Log.e("yaoyuliang", "***fileName=" + fileName);
             String channel = parseFileName2Channel(fileName);
 
             if (TextUtils.isEmpty(channel)) {
