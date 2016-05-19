@@ -5,6 +5,10 @@ import android.os.Build;
 
 import java.lang.reflect.Method;
 
+/**
+ * 需要在AndroidManifest.xml中加入如下权限
+ *   <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+ */
 public class NotificationsPanelUtils {
 
     public static void expandNotificationPanel(Context mContext) {
