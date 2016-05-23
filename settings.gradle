@@ -1,1 +1,2 @@
-include ':learn', ':furansujin', ':troposphere', ':rapidnetwork', ':freeload', ':memento'
+include ':learn', ':furansujin', ':troposphere', ':rapidnetwork', ':freeload', ':memento', ':ACDDCore'
+project(':ACDDCore').projectDir = new File('3rdparty/proj/bunnyblue-ACDD-V1.4.0-10-gd5f9865/bunnyblue-ACDD-d5f9865/ACDDCore')
